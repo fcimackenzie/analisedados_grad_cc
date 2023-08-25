@@ -306,7 +306,24 @@ aquecglobal %>%
   theme_light()
 ```
 
-**Conclua**: Como podemos ver do gráfico, há uma clara tendência de crescimento das temperaturas médias globais. A linha azul é uma linha de regressão apenas para facilitar a visualização da correlação positiva de intensidade moderada entre **Ano** e **Temperatura**.
+**Conclua**: Como podemos ver do gráfico acima, há uma clara tendência de crescimento das temperaturas médias globais. A linha azul é uma linha de regressão apenas para facilitar a visualização da correlação positiva de intensidade moderada entre **Ano** e **Temperatura**.
 
+
+
+```{r}
+#| echo: true
+tempinic <- aquecglobal[which(aquecglobal == min(aquecglobal$Ano)),"Temperatura"]
+tempfinal <- aquecglobal[which(aquecglobal == max(aquecglobal$Ano)),"Temperatura"]
+deltatemp <- round(((tempfinal - tempinic)/tempinic)*100,2)
+tempmin <- min(aquecglobal$Temperatura)
+tempmax <- max(aquecglobal$Temperatura)
+deltatemp2 <- round(((tempmax - tempmin)/tempmin)*100,2)
+```
+
+Entretanto, precisamos tomar cuidado com a maneira como fazemos gráficos; no exemplo acima, a escala em **y** não começa em zero, e a amplitude dos dados é muito pequena: `r max(aquecglobal$Temperatura) - min(aquecglobal$Temperatura)`.
+
+Se considerarmos o valor da temperatura para o ano inicial (`r min(aquecglobal$Ano)`=`r tempinic`)  e ano final (`r max(aquecglobal$Ano)`=`r tempfinal`), o aumento percentual de temperatura para esse período é de `r deltatemp`%.
+
+Se considerarmos o valor mínimo (`r min(aquecglobal$Temperatura)`) e máximo (`r max(aquecglobal$Temperatura)`) da temperatura durante este período, o aumento percentual de temperatura é de `r deltatemp2`%.
 
 :::
