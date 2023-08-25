@@ -1,0 +1,312 @@
+---
+title: "Exercícios Diagramas Dispersão e Correlação"
+subtitle: "Análise de Dados | CC -- FCI"
+format: 
+   html:
+     code-fold: true
+     code-summary: "Show the code"
+lang: pt
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "" 
+    echo: false
+    warning: false
+    message: false
+    R.options:
+      knitr.graphics.auto_pdf: true
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(gt)
+library(tidyverse)
+```
+
+1. **Homicídio e suicídio**. A prevenção do suicídio é um problema importante encarado pelos trabalhadores da saúde mental. A previsão de regiões geográficas onde o risco de suicídio é alto poderia ajudar as pessoas a decidir onde aumentar ou melhorar os recursos e cuidados com a saúde. Alguns psiquiatras argumentaram que homicídio e suicídio podem ter algumas causas em comum. Nesse caso, seria de se esperar que as taxas de homicídio e suicídio fossem correlacionadas. E se isso é verdade, áreas com altas taxas de homicídio poderiam ter previsão de altas taxas de suicídio e, portanto, merecedoras de mais recursos para a saúde mental. A pesquisa tem tido resultados mistos, incluindo alguma evidência de que há uma correlação positiva em certos países europeus, mas não nos EUA. Eis os dados de 2015 para 11 condados em Ohio com dados suficientes para homicídios e suicídios para permitir uma estimativa de taxas para ambos. As taxas são por 100 mil pessoas. 
+
+```{r}
+homicidiosuicidio <- read_csv("homicidiosuicidio.csv")
+```
+
+```{r}
+homicidiosuicidio %>%
+  arrange(Condado) %>%
+  gt()
+```
+
+
+::: {.panel-tabset}
+
+## Pergunta
+
+Faça um diagrama de dispersão para verificar se taxas de homicídio e suicídio são correlacionadas. Para esses dados, estamos simplesmente interessados em explorar a relação entre as duas variáveis, de modo que nenhuma variável é uma escolha óbvia para a variável explicativa. Por conveniência, use a taxa de homicídio como variável explicativa e taxa de suicídio como resposta.
+
+## Resposta
+
+```{r}
+#| echo: true
+ggplot(homicidiosuicidio) +
+  geom_point(aes(x=`Taxa de homicídio`, y = `Taxa de suicídio`)) +
+  scale_x_continuous(limits = c(0,15)) +
+  scale_y_continuous(limits = c(0,20)) +
+  theme_light()
+```
+:::
+
+2. **Terceirização pelas companhias aéreas**. As companhias aéreas têm terceirizado, de modo crescente, a manutenção de suas aeronaves para outras companhias. Uma preocupação externada por críticos é que a manutenção pode ser feita de maneira menos cuidadosa, de modo que a terceirização cria uma condição de perigo. Além disso, os atrasos são constantes, devido a problemas de manutenção, de modo que se devem examinar os dados do governo sobre percentuais das principais manutenções terceirizadas e percentuais de atrasos em voos atribuídos à companhia, para determinar se a preocupação se justifica. Isso foi feito e os dados de 2005 e 2006 parecem justificar a preocupação dos críticos. Dados mais recentes justificam essa preocupação? Eis os dados para 2018.
+
+```{r}
+terceirizacao <- read_csv("terceirizacao.csv")
+```
+
+```{r}
+terceirizacao %>%
+  gt()
+```
+
+::: {.panel-tabset}
+
+## Pergunta
+
+Faça um diagrama de dispersão que mostre a relação entre atrasos e terceirização
+
+## Resposta
+
+```{r}
+#| echo: true
+terceirizacao %>%
+  ggplot() +
+  geom_point(aes(x = `Percentual Terceirização`, y = `Percentual Atraso`)) +
+  scale_x_continuous(limits = c(0,80)) +
+  scale_y_continuous(limits = c(0,35)) +
+  theme_light()
+```
+
+:::
+
+3. **Dirigir rápido desperdiça gasolina?** Como muda o consumo de gasolina de um carro quando sua velocidade aumenta? A seguir, estão os dados para um Volkawagen Jetta Diesel de 2013. A velocidade foi medida em milhas por hora, e o consumo de combustível, em milhas por galão.
+
+```{r}
+consumo_x_velocidade <- read_csv("consumo_x_velocidade.csv")
+```
+
+```{r}
+consumo_x_velocidade <- consumo_x_velocidade %>%
+  rename(Velocidade = Speed, Consumo = Fuel)
+```
+```{r}
+consumo_x_velocidade %>%
+    gt()
+```
+
+::: {.panel-tabset}
+
+## Pergunta
+
+a. Faça um diagrama de dispersão. (Qual é a variável explicativa?)
+b. Descreva a forma da relação. Ela não é linear. Explique por que a forma da relação faz sentido.
+c. Não faz sentido descrever as variáveis como positivamente associadas ou negativamente associadas. Por quê?
+d. A relação é razoavelmente forte ou bem fraca? Explique sua resposta.
+
+
+## Resposta
+
+a. Faça um diagrama de dispersão. (Qual é a variável explicativa?)
+
+A variável explicativa é _Velocidade_, porque queremos saber como o _Consumo_ de combustível varia conforme variamos a _Velocidade_.
+
+```{r}
+#| echo: true
+consumo_x_velocidade %>%
+  ggplot() +
+  geom_point(aes(x=Velocidade,y=Consumo)) +
+  scale_x_continuous(limits = c(0,85)) +
+  scale_y_continuous(limits = c(0,85)) +
+  theme_light()
+```
+
+b. A relação não é linear; uma possível explicação é porque os veículos são mais eficientes em termos de consumo em velocidades mais altas (pelo menos até certo limite de velocidade).
+
+c. Como o gráfico apresenta uma relação não linear, não faz sentido indicar se a relação é positiva ou negativa para todos os pontos; aparentemente, entretanto, podemos dizer que para velocidades de até 30mph, temos uma relação positiva e a partir de 30mph temos uma relação negativa.
+
+```{r}
+#| echo: true
+ggplot(consumo_x_velocidade) +
+  geom_point(data=filter(consumo_x_velocidade,Velocidade <= 30), aes(x = Velocidade, y=Consumo), color ="red") +
+  geom_point(data=filter(consumo_x_velocidade,Velocidade > 30), aes(x = Velocidade, y=Consumo), color ="blue") +
+  scale_x_continuous(limits = c(0,85)) +
+  scale_y_continuous(limits = c(0,85)) +
+  theme_light()
+```
+
+
+d. Considerando a primeira parte dos dados, até 30mph, temos uma relação positiva forte; para os dados a partir de 30mph, a relação é positiva, mas de menor intensidade.
+
+:::
+
+4. **Recifes de coral**. Considere um estudo feito por cientistas, que examinaram dados sobre as temperaturas médias da superfície do mar (em graus Celsius) e o crescimento médio de corais (em centímetros por ano), durante um período de vários anos, em localizações do Golfo do México e do Caribe. Eis os dados para o Golfo do México:
+
+```{r}
+tempgolfmexico=tibble(`Temperatura Superf. Mar`=c(26.7, 26.6, 26.6, 26.5, 26.3, 26.1),
+                      Crescimento=c(0.85,0.85,0.79,0.86,0.89,0.92))
+```
+
+```{r}
+tempgolfmexico %>%
+  gt()
+```
+:::{.panel-tabset}
+
+## Pergunta
+
+a. Faça um diagrama de dispersão. Qual é a variável explicativa? O gráfico mostra um padrão linear negativo.
+b. Encontre a correlação **r** passo a passo. Você pode querer arredondar os dados para duas casas decimais em cada passo. Primeiro, encontre a média e o desvio-padrão de cada variável. Determine, então, os seis valores padronizados para cada variável. Finalmente, use a fórmula de **r**. Explique como seu valor para **r** coincide com a direção do padrão linear em seu gráfico da parte (a).
+c. Digite, agora, esses dados em sua calculadora ou em um software e use a função correlação para encontrar **r**. Verifique se você obteve o mesmo resultado que em (b), a menos de erros de arredondamento.
+
+## Resposta
+
+a. Faça um diagrama de dispersão.
+
+```{r}
+#| echo: true
+tempgolfmexico %>%
+  ggplot() +
+  geom_point(aes(x=`Temperatura Superf. Mar`,y=Crescimento)) +
+  scale_x_continuous(limits = c(26,27)) +
+  scale_y_continuous(limits = c(0.7,1)) +
+  theme_light()
+```
+A variável explicativa é a Temperatura da Superfície do Mar, já que o estudo visa entender sua influência sobre o Crescimento dos corais. Pelo gráfico temos um padrão aproximadamente linear negativo.
+
+b. Encontre a correlação **r** passo a passo.
+
+Desvio Padrão de cada variável:
+
+```{r}
+medTemperatura = mean(tempgolfmexico$`Temperatura Superf. Mar`, na.rm = T)
+medCrescimento = mean(tempgolfmexico$Crescimento)
+desvTemperatura = sd(tempgolfmexico$`Temperatura Superf. Mar`)
+desvCrescimento = sd(tempgolfmexico$Crescimento)
+```
+
+```{r}
+caculos <- tempgolfmexico %>%
+  mutate(`xi-xbar`=`Temperatura Superf. Mar`- mean(`Temperatura Superf. Mar`, na.rm = T),
+         `yi-ybar`=Crescimento - mean(Crescimento, na.rm = T),
+         `(xi-xbar)^2` = `xi-xbar`**2,
+         `(yi-ybar)^2` = `yi-ybar`**2)
+```
+```{r}
+caculos %>%
+  gt() %>%
+  cols_label(
+    "Temperatura Superf. Mar" = html("Temperatura</br>Superf. Mar"),
+    "xi-xbar" = html("x<sub>i</sub> - x&#773;"),
+    "yi-ybar" = html("y<sub>i</sub> - y&#773;"),
+    "(xi-xbar)^2" = html("(x<sub>i</sub> - x&#773;)<sup>2</sup>"),
+    "(yi-ybar)^2" = html("(y<sub>i</sub> - y&#773;)<sup>2</sup>"),
+  ) %>%
+  fmt_auto()
+```
+
+Com os valores de `xi-xbar` e de `yi-ybar`  e os respectivos quadrados, podemos calcular os desvios padrões, dado pela fórmula
+$$s = \sqrt{\frac{1}{n-1}\sum((x_i - \bar{x})^2)}$$
+
+```{r}
+ntemp = dim(tempgolfmexico)[1]
+sumquadXi =  sum(caculos$`(xi-xbar)^2`, na.rm = T)
+sumquadYi = sum(caculos$`(yi-ybar)^2`, na.rm= T)
+somaTemp = sum(caculos$`(xi-xbar)^2`)
+somaCres = sum(caculos$`(yi-ybar)^2`)
+desvTempmanual = sqrt((1/(ntemp-1))*somaTemp)
+desvCrescmanual = sqrt((1/(ntemp-1))*somaCres)
+```
+Considerando **n** como `r dim(tempgolfmexico)[1]`:
+
+* Primeiro, a soma dos quadrados  $(x_i - \bar{x})^2$: `r sumquadXi`; dividindo por $n-1$: `r round(sumquadXi/(ntemp-1), 6)`; restando então, extrair a raiz quadrada.
+* Depois, a soma dos quadrados $(y_i = \bar{y})^2$: `r sumquadYi`; dividindo por $n-1$: `r round(sumquadYi/(ntemp-1), 6)`; restando então, extrair a raiz quadrada.
+* O desvio padrão da Temperatura da Superfície do Mar é então  $s_{temp}$ = `r round(desvTempmanual, 4)`; o cálculo pelo **R** resulta em `r desvTemperatura`.
+* O desvio padrão do Crescimento é $s_{cresc}$ = `r round(desvCrescmanual,4)`; o cálculo pelo **R** resulta em `r desvCrescimento`.
+
+Agora vamos calcular os produtos 
+$$\left(\frac{x_i - \bar{x}}{s_x}\right)\left(\frac{y_i - \bar{y}}{s_y}\right)$$
+Para facilitar, vamos adicionar mais três colunas na tabela:
+
+```{r}
+caculos2 <- caculos %>%
+  mutate(`(xi-xbar)/sx`=`xi-xbar`/desvTempmanual,
+         `(yi-ybar)/sy`=`yi-ybar`/desvCrescmanual,
+         Produto = `(xi-xbar)/sx`*`(yi-ybar)/sy`)
+caculos2 %>%
+  gt() %>%
+  cols_label(
+    "Temperatura Superf. Mar" = html("Temperatura</br>Superf. Mar"),
+    "xi-xbar" = html("x<sub>i</sub> - x&#773;"),
+    "yi-ybar" = html("y<sub>i</sub> - y&#773;"),
+    "(xi-xbar)^2" = html("(x<sub>i</sub> - x&#773;)<sup>2</sup>"),
+    "(yi-ybar)^2" = html("(y<sub>i</sub> - y&#773;)<sup>2</sup>"),
+    "(xi-xbar)/sx" = html("(x<sub>i</sub> - x&#773;)/s<sub>x</sub>"),
+    "(yi-ybar)/sy" = html("(y<sub>i</sub> - y&#773;)/s<sub>y</sub>")
+  ) %>%
+  fmt_auto()
+```
+
+Fazemos então a soma da coluna "Produto" = `r round(sum(caculos2$Produto),8)`, e dividimos por $n-1$, o que dá **r** = `r round(sum(caculos2$Produto)/(ntemp-1),8)`
+
+c. Calculando pelo **R**, utilizamos a seguinte expressão 
+```
+cor(tempgolfmexico$`Temperatura Superf. Mar`,tempgolfmexico$Crescimento)
+```
+```{r}
+#| echo: true
+cor(tempgolfmexico$`Temperatura Superf. Mar`,tempgolfmexico$Crescimento)
+```
+
+Os valores coincidem, dentro dos erros de arredondamento.
+
+:::
+
+
+
+5. **Aquecimento global**. As temperaturas médias globais têm aumentado nos anos recentes? Aqui estão as temperaturas médias globais anuais para os últimos 25 anos, em graus Celsius:
+
+```{r}
+aquecglobal <- read_csv("aquecimentoglobal.csv")
+```
+
+```{r}
+aquecglobal %>%
+  gt()
+```
+
+:::{.panel-tabset}
+
+## Pergunta
+
+Discuta o que os dados mostram sobre a mudança nas temperaturas médias globais ao longo do tempo
+
+
+## Resposta
+
+**Estabeleça**: A questão deste problema é examinar a mudança nas temperaturas médias globais no período dado.
+
+**Planeje**: Como temos dados anuais, de 1994 a 2018, podemos criar um gráfico de dispersão para essa visualização.
+
+**Resolva**:
+
+```{r}
+#| echo: true
+aquecglobal %>%
+  ggplot(aes(x = Ano, y = Temperatura)) +
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE) +
+  theme_light()
+```
+
+**Conclua**: Como podemos ver do gráfico, há uma clara tendência de crescimento das temperaturas médias globais. A linha azul é uma linha de regressão apenas para facilitar a visualização da correlação positiva de intensidade moderada entre **Ano** e **Temperatura**.
+
+
+:::

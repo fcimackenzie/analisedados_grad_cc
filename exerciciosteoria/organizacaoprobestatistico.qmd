@@ -1,0 +1,205 @@
+---
+title: "Organização de um problema estatístico"
+subtitle: "Análise de Dados | CC -- FCI"
+format: html
+lang: pt
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "" 
+    echo: false
+    R.options:
+      knitr.graphics.auto_pdf: true
+---
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(gt)
+library(tidyverse)
+library(fmsb)
+```
+
+
+A maioria de nossos exemplos e exercícios teve por objetivo ajudar você a aprender as ferramentas básicas (gráficos e cálculos) para a descrição e comparação de distribuições. Você aprendeu, também, os princípios básicos que orientam o uso dessas ferramentas, como “comece por um gráfico” e “observe o padrão geral e desvios fortes do padrão”. Os dados com os quais você trabalha não são apenas números; eles descrevem um contexto específico, como a profundidade da água nos Everglades, ou os tempos de viagem para o trabalho. Pelo fato de os dados se originarem de um contexto específico, o passo final no exame de dados é uma conclusão em relação a esse contexto. A profundidade da água nos Everglades tem um ciclo anual que reflete as estações de chuva e de seca na Flórida. Os tempos de viagem para o trabalho são geralmente mais longos em Nova York do que na Carolina do Norte.
+
+Vamos voltar às taxas de graduação no prazo no Ensino Médio, discutidas no Exemplo 1.4. Pelo exemplo, sabemos que as taxas de graduação no prazo variam de 71,1%, no Novo México, a 91%, em Iowa, com mediana de 86%. As taxas de graduação nos estados estão relacionadas a muitos fatores e, em um problema estatístico, em geral tentamos explicar as diferenças ou variação em uma variável como taxa de graduação através de alguns desses fatores. Por exemplo, os estados com menores rendas familiares tendem a ter taxas de graduação mais baixas no Ensino Médio? Ou, os estados em alguma região do país tendem a ter taxas mais baixas de graduação no Ensino Médio do que os estados em outras regiões?
+
+À medida que você aprender mais sobre as ferramentas e os princípios estatísticos, você se deparará com problemas estatísticos mais complexos. Embora nenhum sistema acomode todos os vários problemas que surgem na aplicação da estatística ao mundo real, achamos que o seguinte processo de pensamento em quatro passos dá uma orientação útil. Em particular, o primeiro e o último passos enfatizam que os problemas estatísticos estão ligados a situações específicas do mundo real e, portanto, envolvem mais do que cálculos e desenho de gráficos.
+
+## Organização de um problema estatístico: um processo de quatro passos
+
+* **ESTABELEÇA**: Qual é a questão prática, no contexto do mundo real?
+* **PLANEJE**: Quais operações estatísticas específicas esse problema requer?
+* **RESOLVA**: Construa gráficos e faça os cálculos necessários para esse problema.
+* **CONCLUA**: Forneça suas conclusões práticas no contexto do mundo real.
+
+Para ajudar você a dominar o básico, muitos exercícios irão continuar a dizer-lhe o que fazer – faça um histograma, ache o resumo dos cinco números, e assim por diante. Problemas estatísticos reais não vêm com instruções detalhadas. De agora em diante, especialmente nos capítulos finais deste livro, você encontrará alguns exercícios que são mais realistas. Use o processo dos quatro passos como guia para resolver e relatar esses problemas. Estes vêm marcados com o ícone dos quatro passos, como ilustra o exemplo seguinte.
+
+### EXEMPLO 2.9 Comparação de taxas de graduação
+
+**ESTABELEÇA**: A lei federal exige que todos os estados nos EUA usem um cálculo comum para as taxas de graduação no prazo no Ensino Médio, começando no ano escolar de 2010 e 2011. Anteriormente, os estados escolhiam vários métodos de cálculo que davam respostas que podiam variar em mais de 10%. Esse cálculo comum permite comparação significativa das taxas de graduação entre os estados.
+
+Pela @tbl-gradontime, agora sabemos que as taxas de graduação no prazo no Ensino Médio no ano escolar de 2016 e 2017 variaram de 71,1%, no Novo México, a 91%, em Iowa. O birô do censo norte-americano divide os 50 estados e o Distrito de Colúmbia em quatro regiões geográficas: a Nordeste (NE), Meio-Oeste (MO), Sul (S) e Oeste (O). A região para cada estado está incluída na Tabela 1.1. Os estados nas quatro regiões do país apresentam distribuições distintas das taxas de graduação? Como se comparam as taxas médias de graduação dos estados em cada uma dessas regiões?
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(readr)
+tabela1_1 <- read_csv("tabela1_1.csv")
+```
+```{r}
+tabela1_1 <- tabela1_1 %>%
+  mutate(Região...3 = case_when(Região...3 == "MW" ~ "MO",
+                                Região...3 == "W" ~ "O", 
+                                .default = Região...3),
+         Região...6 = case_when(Região...6 == "MW" ~ "MO",
+                                Região...6 == "W" ~ "O", 
+                                .default = Região...6),
+         Região...9 = case_when(Região...9 == "MW" ~ "MO",
+                                Região...9 == "W" ~ "O", 
+                                .default = Região...9))
+```
+
+\scriptsize
+```{r}
+#| echo: false
+#| label: tbl-gradontime
+#| tbl-cap: "Percentual de alunos do ensino médio que se graduaram no tempo certo"
+tabela1_1 |>
+     gt() %>%
+  sub_missing() %>%
+ # tab_header(
+ #    title = "Percentual de alunos do ensino médio que se graduaram no tempo certo",
+ #    subtitle = "Dados para 2013--2014"
+ #  ) |>
+ cols_label(
+    "Estado...1" = "Estado",
+   "Percentual...2" = "Percent." ,
+   "Região...3" = "Região",
+   "Estado...4" = "Estado",
+   "Percentual...5" = "Percent.",
+   "Região...6" = "Região" ,
+   "Estado...7" = "Estado",
+   "Percentual...8" = "Percent." ,
+   "Região...9" = "Região" ,
+ ) %>%
+  fmt_number(
+#    columns = c(Percentual,Percentual,Percentual), 
+    decimals = 1, 
+    use_seps = TRUE
+  )
+```
+
+\normalsize
+
+**PLANEJE**: Use gráficos e resumos numéricos para descrever e comparar as distribuições das taxas de graduação no prazo no Ensino Médio dos estados nas quatro regiões dos EUA.
+
+**RESOLVA**: Podemos usar diagramas em caixa para comparar as distribuições, mas diagramas de ramo e folhas preservam mais detalhes e funcionam bem com conjuntos de dados desse tamanho. Abaixo são apresentados diagramas de ramo e folhas com os ramos alinhados, para fácil comparação. Os ramos foram divididos para apresentar melhor as distribuições, e os dados foram arredondados para o percentual mais próximo (sem casas decimais). Os diagramas de ramo e folhas se sobrepõem, e é necessário algum cuidado na comparação dos quatro diagramas de ramo e folhas porque os tamanhos amostrais diferem, com alguns diagramas de ramo e folhas tendo mais folhas do que outros. Os estados norte-americanos do Nordeste e do Meio-Oeste têm distribuições que são semelhantes entre si. O Sul, com a maioria das observações, tem uma observação baixa que corresponde ao Distrito de Colúmbia, que fica um pouco separado dos demais, e alguma assimetria à esquerda. Com pouca assimetria e sem valores atípicos sérios, relatamos x e s como nossas medidas resumo do centro e variabilidade da distribuição das taxas de graduação no prazo dos estados em cada região. Como o Distrito de Colúmbia não é um estado, embora frequentemente incluído com dados dos estados, relatamos as estatísticas resumo para o Sul com e sem essa observação.
+
+
+
+
+```{r}
+#| echo: false
+tabela1_1_long <- bind_rows(select(tabela1_1, Estado=`Estado...1`, Percentual=`Percentual...2`, `Região`=`Região...3`),
+                            select(tabela1_1, Estado=`Estado...4`, Percentual=`Percentual...5`, `Região`=`Região...6`),
+                            select(tabela1_1, Estado=`Estado...7`, Percentual=`Percentual...8`, `Região`=`Região...9`))
+
+```
+
+
+
+```{r}
+#| echo: false
+tb1_1_regioes_com_DC <- tabela1_1_long %>%
+  group_by(`Região`) %>%
+  summarise(N = n(),
+            `Média`=mean(Percentual, na.rm = TRUE), 
+            `Desvio Padrão` = sd(Percentual)) %>%
+  mutate(Região = case_when(Região == "S" ~ "Sul (inc. DC)",
+                            Região == "MO" ~ "Meio-Oeste",
+                            Região == "NE" ~ "Nordeste",
+                            Região == "W" ~ "Oeste",
+                            .default = Região))
+tb1_1_regioes_sem_DC <- tabela1_1_long %>%
+  filter(Estado != "District of Columbia", Região == "S") %>%
+  group_by(`Região`) %>%
+  summarise(N = n(),
+            `Média`=mean(Percentual, na.rm = TRUE), 
+            `Desvio Padrão` = sd(Percentual)) %>%
+  mutate(Região = case_when(Região == "S" ~ "Sul (exc. DC)",
+                            .default = Região))
+
+bind_rows(tb1_1_regioes_com_DC, tb1_1_regioes_sem_DC) %>%
+  gt() %>%
+  fmt_number(columns = c(`Média`,`Desvio Padrão`),
+            decimals = 2)
+```
+
+### Diagramas Ramo-Folha para as Regiões {#fig-diagstem}
+
+```{r}
+par(mfrow=c(1,1))
+```
+
+:::: {.columns}
+::: {.column width="45%"}
+**Oeste**
+```{r}
+#| echo: false
+stem_O <- tabela1_1_long %>%
+  filter(Região == "O") %>%
+  select(Percentual) %>%
+  mutate(Percentual = round(Percentual,0))
+par(mfrow=c(1,1), pin = c(7,3), cex = 1.7)
+gstem(stem_O$Percentual)
+```
+:::
+::: {.column width="45%"}
+**Nordeste**
+```{r}
+stem_NE <- tabela1_1_long %>%
+  filter(Região == "NE") %>%
+  select(Percentual) %>%
+  mutate(Percentual = round(Percentual,0))
+par(mfrow=c(1,1), pin = c(7,3), cex = 1.7)
+gstem(stem_NE$Percentual)
+```
+:::
+::::
+:::: {.columns}
+::: {.column width="45%"}
+**Sul**
+```{r}
+stem_S <- tabela1_1_long %>%
+  filter(Região == "S") %>%
+  select(Percentual) %>%
+  mutate(Percentual = round(Percentual,0))
+par(mfrow=c(1,1), pin = c(7,3), cex = 1.7)
+gstem(stem_S$Percentual)
+```
+:::
+::: {.column width="45%"}
+**Meio-Oeste**
+```{r}
+stem_MO <- tabela1_1_long %>%
+  filter(Região == "MO") %>%
+  select(Percentual) %>%
+  mutate(Percentual = round(Percentual,0))
+par(mfrow=c(1,1), pin = c(7,3), cex = 1.7)
+gstem(stem_MO$Percentual)
+```
+:::
+::::
+
+**CONCLUA**: A tabela de estatísticas resumo e os diagramas de ramo e folhas levam a conclusões semelhantes. Os estados norte-americanos do Meio-Oeste e do Nordeste são mais semelhantes entre si com o Sul, excluindo o Distrito de Colúmbia, tendo uma média ligeiramente menor e maior desvio-padrão. Os estados do Oeste têm uma taxa média de graduação mais baixa do que as outras três regiões, com desvio-padrão semelhante ao do Sul, porém mais alto do que os do Meio-Oeste ou Nordeste.
+
+
+É importante lembrar que os indivíduos no Exemplo 2.9 são os estados. Por exemplo, a média de 87,12 é a média das taxas de graduação no prazo para os nove estados norte-americanos do Nordeste, e o desvio-padrão nos diz quanto as taxas desses estados variam em relação a essa média. No entanto, a média desses nove estados não é a mesma que a taxa de graduação para todos das escolas de Ensino Médio no Nordeste, a menos que os estados tenham o mesmo número de graduados no Ensino Médio. A taxa de graduação no Nordeste para todos os estudantes do Ensino Médio no Nordeste é uma média ponderada das taxas dos estados, com os maiores estados recebendo mais peso. Por exemplo, como Nova York é o estado mais populoso no Nordeste e tem também a menor taxa da graduação, esperaríamos que a taxa de graduação de todos os estudantes do Ensino Médio no Nordeste fosse menor que 87,12, porque Nova York puxaria para baixo a taxa geral de graduação. Um exemplo análogo pode ser observado no Exercício 2.37[^1]
+
+[^1]: Referente ao livro texto.
