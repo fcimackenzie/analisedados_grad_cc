@@ -7,3 +7,6 @@
 exerciciosteoria/*_cache/**
 exerciciosteoria/*_files/**
 LocalOnly/**
+/.quarto/
+/_site/
+*_freeze/**

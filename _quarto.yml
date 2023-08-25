@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Análise de Dados"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Slides"
+        contents:
+      - section: "Exercícios"
+        contents:
+          - href: exerciciosteoria/organizacaoprobestatistico.qmd
+            text: Organização de um problema estatístico
+          - href: exerciciosteoria/diagramasdispersaocorrelacao.qmd
+            text: Diagramas Dispersão e Correlação
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+execute:
+  freeze: auto
+

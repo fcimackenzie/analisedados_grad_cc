@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Organização de um problema estatístico</title>
+<title>Análise de Dados - Organização de um problema estatístico</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +23,149 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="organizacaoprobestatistico_files/libs/clipboard/clipboard.min.js"></script>
-<script src="organizacaoprobestatistico_files/libs/quarto-html/quarto.js"></script>
-<script src="organizacaoprobestatistico_files/libs/quarto-html/popper.min.js"></script>
-<script src="organizacaoprobestatistico_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="organizacaoprobestatistico_files/libs/quarto-html/anchor.min.js"></script>
-<link href="organizacaoprobestatistico_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="organizacaoprobestatistico_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="organizacaoprobestatistico_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="organizacaoprobestatistico_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="organizacaoprobestatistico_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
 
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="fullcontent">
+<body class="nav-sidebar docked nav-fixed">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Análise de Dados</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Procurar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Alternar de navegação" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">Sobre</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../exerciciosteoria/organizacaoprobestatistico.html">Exercícios</a></li><li class="breadcrumb-item"><a href="../exerciciosteoria/organizacaoprobestatistico.html">Organização de um problema estatístico</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Procurar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Slides</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Exercícios</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/organizacaoprobestatistico.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Organização de um problema estatístico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/diagramasdispersaocorrelacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diagramas Dispersão e Correlação</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#organização-de-um-problema-estatístico-um-processo-de-quatro-passos" id="toc-organização-de-um-problema-estatístico-um-processo-de-quatro-passos" class="nav-link active" data-scroll-target="#organização-de-um-problema-estatístico-um-processo-de-quatro-passos">Organização de um problema estatístico: um processo de quatro passos</a>
+  <ul class="collapse">
+  <li><a href="#exemplo-2.9-comparação-de-taxas-de-graduação" id="toc-exemplo-2.9-comparação-de-taxas-de-graduação" class="nav-link" data-scroll-target="#exemplo-2.9-comparação-de-taxas-de-graduação">EXEMPLO 2.9 Comparação de taxas de graduação</a></li>
+  <li><a href="#fig-diagstem" id="toc-fig-diagstem" class="nav-link" data-scroll-target="#fig-diagstem">Diagramas Ramo-Folha para as Regiões</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -81,23 +206,23 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div id="tbl-gradontime" class="anchored">
 
-<div id="jxgysnbahz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jxgysnbahz table {
+<div id="opnwppjsxt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#opnwppjsxt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jxgysnbahz thead, #jxgysnbahz tbody, #jxgysnbahz tfoot, #jxgysnbahz tr, #jxgysnbahz td, #jxgysnbahz th {
+#opnwppjsxt thead, #opnwppjsxt tbody, #opnwppjsxt tfoot, #opnwppjsxt tr, #opnwppjsxt td, #opnwppjsxt th {
   border-style: none;
 }
 
-#jxgysnbahz p {
+#opnwppjsxt p {
   margin: 0;
   padding: 0;
 }
 
-#jxgysnbahz .gt_table {
+#opnwppjsxt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -123,12 +248,12 @@ ul.task-list li input[type="checkbox"] {
   border-left-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_caption {
+#opnwppjsxt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jxgysnbahz .gt_title {
+#opnwppjsxt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -140,7 +265,7 @@ ul.task-list li input[type="checkbox"] {
   border-bottom-width: 0;
 }
 
-#jxgysnbahz .gt_subtitle {
+#opnwppjsxt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -152,7 +277,7 @@ ul.task-list li input[type="checkbox"] {
   border-top-width: 0;
 }
 
-#jxgysnbahz .gt_heading {
+#opnwppjsxt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -164,13 +289,13 @@ ul.task-list li input[type="checkbox"] {
   border-right-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_bottom_border {
+#opnwppjsxt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_col_headings {
+#opnwppjsxt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -185,7 +310,7 @@ ul.task-list li input[type="checkbox"] {
   border-right-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_col_heading {
+#opnwppjsxt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -205,7 +330,7 @@ ul.task-list li input[type="checkbox"] {
   overflow-x: hidden;
 }
 
-#jxgysnbahz .gt_column_spanner_outer {
+#opnwppjsxt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -217,15 +342,15 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 4px;
 }
 
-#jxgysnbahz .gt_column_spanner_outer:first-child {
+#opnwppjsxt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jxgysnbahz .gt_column_spanner_outer:last-child {
+#opnwppjsxt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jxgysnbahz .gt_column_spanner {
+#opnwppjsxt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -237,11 +362,11 @@ ul.task-list li input[type="checkbox"] {
   width: 100%;
 }
 
-#jxgysnbahz .gt_spanner_row {
+#opnwppjsxt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jxgysnbahz .gt_group_heading {
+#opnwppjsxt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -267,7 +392,7 @@ ul.task-list li input[type="checkbox"] {
   text-align: left;
 }
 
-#jxgysnbahz .gt_empty_group_heading {
+#opnwppjsxt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -282,15 +407,15 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 
-#jxgysnbahz .gt_from_md > :first-child {
+#opnwppjsxt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jxgysnbahz .gt_from_md > :last-child {
+#opnwppjsxt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jxgysnbahz .gt_row {
+#opnwppjsxt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -309,7 +434,7 @@ ul.task-list li input[type="checkbox"] {
   overflow-x: hidden;
 }
 
-#jxgysnbahz .gt_stub {
+#opnwppjsxt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -322,7 +447,7 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 5px;
 }
 
-#jxgysnbahz .gt_stub_row_group {
+#opnwppjsxt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -336,15 +461,15 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: top;
 }
 
-#jxgysnbahz .gt_row_group_first td {
+#opnwppjsxt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jxgysnbahz .gt_row_group_first th {
+#opnwppjsxt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jxgysnbahz .gt_summary_row {
+#opnwppjsxt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -354,16 +479,16 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 5px;
 }
 
-#jxgysnbahz .gt_first_summary_row {
+#opnwppjsxt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_first_summary_row.thick {
+#opnwppjsxt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jxgysnbahz .gt_last_summary_row {
+#opnwppjsxt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -373,7 +498,7 @@ ul.task-list li input[type="checkbox"] {
   border-bottom-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_grand_summary_row {
+#opnwppjsxt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -383,7 +508,7 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 5px;
 }
 
-#jxgysnbahz .gt_first_grand_summary_row {
+#opnwppjsxt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -393,7 +518,7 @@ ul.task-list li input[type="checkbox"] {
   border-top-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_last_grand_summary_row_top {
+#opnwppjsxt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -403,11 +528,11 @@ ul.task-list li input[type="checkbox"] {
   border-bottom-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_striped {
+#opnwppjsxt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jxgysnbahz .gt_table_body {
+#opnwppjsxt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -416,7 +541,7 @@ ul.task-list li input[type="checkbox"] {
   border-bottom-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_footnotes {
+#opnwppjsxt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -430,7 +555,7 @@ ul.task-list li input[type="checkbox"] {
   border-right-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_footnote {
+#opnwppjsxt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -439,7 +564,7 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 5px;
 }
 
-#jxgysnbahz .gt_sourcenotes {
+#opnwppjsxt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -453,7 +578,7 @@ ul.task-list li input[type="checkbox"] {
   border-right-color: #D3D3D3;
 }
 
-#jxgysnbahz .gt_sourcenote {
+#opnwppjsxt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -461,63 +586,63 @@ ul.task-list li input[type="checkbox"] {
   padding-right: 5px;
 }
 
-#jxgysnbahz .gt_left {
+#opnwppjsxt .gt_left {
   text-align: left;
 }
 
-#jxgysnbahz .gt_center {
+#opnwppjsxt .gt_center {
   text-align: center;
 }
 
-#jxgysnbahz .gt_right {
+#opnwppjsxt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jxgysnbahz .gt_font_normal {
+#opnwppjsxt .gt_font_normal {
   font-weight: normal;
 }
 
-#jxgysnbahz .gt_font_bold {
+#opnwppjsxt .gt_font_bold {
   font-weight: bold;
 }
 
-#jxgysnbahz .gt_font_italic {
+#opnwppjsxt .gt_font_italic {
   font-style: italic;
 }
 
-#jxgysnbahz .gt_super {
+#opnwppjsxt .gt_super {
   font-size: 65%;
 }
 
-#jxgysnbahz .gt_footnote_marks {
+#opnwppjsxt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jxgysnbahz .gt_asterisk {
+#opnwppjsxt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jxgysnbahz .gt_indent_1 {
+#opnwppjsxt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jxgysnbahz .gt_indent_2 {
+#opnwppjsxt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jxgysnbahz .gt_indent_3 {
+#opnwppjsxt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jxgysnbahz .gt_indent_4 {
+#opnwppjsxt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jxgysnbahz .gt_indent_5 {
+#opnwppjsxt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -704,23 +829,23 @@ certo</p> </caption>
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="rdpuzimvho" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rdpuzimvho table {
+<div id="zyzoklougt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zyzoklougt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rdpuzimvho thead, #rdpuzimvho tbody, #rdpuzimvho tfoot, #rdpuzimvho tr, #rdpuzimvho td, #rdpuzimvho th {
+#zyzoklougt thead, #zyzoklougt tbody, #zyzoklougt tfoot, #zyzoklougt tr, #zyzoklougt td, #zyzoklougt th {
   border-style: none;
 }
 
-#rdpuzimvho p {
+#zyzoklougt p {
   margin: 0;
   padding: 0;
 }
 
-#rdpuzimvho .gt_table {
+#zyzoklougt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -746,12 +871,12 @@ certo</p> </caption>
   border-left-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_caption {
+#zyzoklougt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rdpuzimvho .gt_title {
+#zyzoklougt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -763,7 +888,7 @@ certo</p> </caption>
   border-bottom-width: 0;
 }
 
-#rdpuzimvho .gt_subtitle {
+#zyzoklougt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -775,7 +900,7 @@ certo</p> </caption>
   border-top-width: 0;
 }
 
-#rdpuzimvho .gt_heading {
+#zyzoklougt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -787,13 +912,13 @@ certo</p> </caption>
   border-right-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_bottom_border {
+#zyzoklougt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_col_headings {
+#zyzoklougt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -808,7 +933,7 @@ certo</p> </caption>
   border-right-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_col_heading {
+#zyzoklougt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -828,7 +953,7 @@ certo</p> </caption>
   overflow-x: hidden;
 }
 
-#rdpuzimvho .gt_column_spanner_outer {
+#zyzoklougt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -840,15 +965,15 @@ certo</p> </caption>
   padding-right: 4px;
 }
 
-#rdpuzimvho .gt_column_spanner_outer:first-child {
+#zyzoklougt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rdpuzimvho .gt_column_spanner_outer:last-child {
+#zyzoklougt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rdpuzimvho .gt_column_spanner {
+#zyzoklougt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -860,11 +985,11 @@ certo</p> </caption>
   width: 100%;
 }
 
-#rdpuzimvho .gt_spanner_row {
+#zyzoklougt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rdpuzimvho .gt_group_heading {
+#zyzoklougt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -890,7 +1015,7 @@ certo</p> </caption>
   text-align: left;
 }
 
-#rdpuzimvho .gt_empty_group_heading {
+#zyzoklougt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -905,15 +1030,15 @@ certo</p> </caption>
   vertical-align: middle;
 }
 
-#rdpuzimvho .gt_from_md > :first-child {
+#zyzoklougt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rdpuzimvho .gt_from_md > :last-child {
+#zyzoklougt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rdpuzimvho .gt_row {
+#zyzoklougt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -932,7 +1057,7 @@ certo</p> </caption>
   overflow-x: hidden;
 }
 
-#rdpuzimvho .gt_stub {
+#zyzoklougt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -945,7 +1070,7 @@ certo</p> </caption>
   padding-right: 5px;
 }
 
-#rdpuzimvho .gt_stub_row_group {
+#zyzoklougt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -959,15 +1084,15 @@ certo</p> </caption>
   vertical-align: top;
 }
 
-#rdpuzimvho .gt_row_group_first td {
+#zyzoklougt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rdpuzimvho .gt_row_group_first th {
+#zyzoklougt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rdpuzimvho .gt_summary_row {
+#zyzoklougt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -977,16 +1102,16 @@ certo</p> </caption>
   padding-right: 5px;
 }
 
-#rdpuzimvho .gt_first_summary_row {
+#zyzoklougt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_first_summary_row.thick {
+#zyzoklougt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rdpuzimvho .gt_last_summary_row {
+#zyzoklougt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -996,7 +1121,7 @@ certo</p> </caption>
   border-bottom-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_grand_summary_row {
+#zyzoklougt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1006,7 +1131,7 @@ certo</p> </caption>
   padding-right: 5px;
 }
 
-#rdpuzimvho .gt_first_grand_summary_row {
+#zyzoklougt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1016,7 +1141,7 @@ certo</p> </caption>
   border-top-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_last_grand_summary_row_top {
+#zyzoklougt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1026,11 +1151,11 @@ certo</p> </caption>
   border-bottom-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_striped {
+#zyzoklougt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rdpuzimvho .gt_table_body {
+#zyzoklougt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1039,7 +1164,7 @@ certo</p> </caption>
   border-bottom-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_footnotes {
+#zyzoklougt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1053,7 +1178,7 @@ certo</p> </caption>
   border-right-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_footnote {
+#zyzoklougt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1062,7 +1187,7 @@ certo</p> </caption>
   padding-right: 5px;
 }
 
-#rdpuzimvho .gt_sourcenotes {
+#zyzoklougt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1076,7 +1201,7 @@ certo</p> </caption>
   border-right-color: #D3D3D3;
 }
 
-#rdpuzimvho .gt_sourcenote {
+#zyzoklougt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1084,63 +1209,63 @@ certo</p> </caption>
   padding-right: 5px;
 }
 
-#rdpuzimvho .gt_left {
+#zyzoklougt .gt_left {
   text-align: left;
 }
 
-#rdpuzimvho .gt_center {
+#zyzoklougt .gt_center {
   text-align: center;
 }
 
-#rdpuzimvho .gt_right {
+#zyzoklougt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rdpuzimvho .gt_font_normal {
+#zyzoklougt .gt_font_normal {
   font-weight: normal;
 }
 
-#rdpuzimvho .gt_font_bold {
+#zyzoklougt .gt_font_bold {
   font-weight: bold;
 }
 
-#rdpuzimvho .gt_font_italic {
+#zyzoklougt .gt_font_italic {
   font-style: italic;
 }
 
-#rdpuzimvho .gt_super {
+#zyzoklougt .gt_super {
   font-size: 65%;
 }
 
-#rdpuzimvho .gt_footnote_marks {
+#zyzoklougt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rdpuzimvho .gt_asterisk {
+#zyzoklougt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rdpuzimvho .gt_indent_1 {
+#zyzoklougt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rdpuzimvho .gt_indent_2 {
+#zyzoklougt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rdpuzimvho .gt_indent_3 {
+#zyzoklougt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rdpuzimvho .gt_indent_4 {
+#zyzoklougt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rdpuzimvho .gt_indent_5 {
+#zyzoklougt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1221,6 +1346,8 @@ certo</p> </caption>
 </div>
 <p><strong>CONCLUA</strong>: A tabela de estatísticas resumo e os diagramas de ramo e folhas levam a conclusões semelhantes. Os estados norte-americanos do Meio-Oeste e do Nordeste são mais semelhantes entre si com o Sul, excluindo o Distrito de Colúmbia, tendo uma média ligeiramente menor e maior desvio-padrão. Os estados do Oeste têm uma taxa média de graduação mais baixa do que as outras três regiões, com desvio-padrão semelhante ao do Sul, porém mais alto do que os do Meio-Oeste ou Nordeste.</p>
 <p>É importante lembrar que os indivíduos no Exemplo 2.9 são os estados. Por exemplo, a média de 87,12 é a média das taxas de graduação no prazo para os nove estados norte-americanos do Nordeste, e o desvio-padrão nos diz quanto as taxas desses estados variam em relação a essa média. No entanto, a média desses nove estados não é a mesma que a taxa de graduação para todos das escolas de Ensino Médio no Nordeste, a menos que os estados tenham o mesmo número de graduados no Ensino Médio. A taxa de graduação no Nordeste para todos os estudantes do Ensino Médio no Nordeste é uma média ponderada das taxas dos estados, com os maiores estados recebendo mais peso. Por exemplo, como Nova York é o estado mais populoso no Nordeste e tem também a menor taxa da graduação, esperaríamos que a taxa de graduação de todos os estudantes do Ensino Médio no Nordeste fosse menor que 87,12, porque Nova York puxaria para baixo a taxa geral de graduação. Um exemplo análogo pode ser observado no Exercício 2.37<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+
+
 </section>
 </section>
 
@@ -1230,8 +1357,7 @@ certo</p> </caption>
 <ol>
 <li id="fn1"><p>Referente ao livro texto.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section></div></main>
-<!-- /main column -->
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
