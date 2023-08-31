@@ -21,6 +21,8 @@ website:
             text: Organização de um problema estatístico
           - href: exerciciosteoria/diagramasdispersaocorrelacao.qmd
             text: Diagramas Dispersão e Correlação
+          - href: exerciciosteoria/regressaolinear.qmd
+            text: Regressão Linear
 format:
   html:
     theme: cosmo
