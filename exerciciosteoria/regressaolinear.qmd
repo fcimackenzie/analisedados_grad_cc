@@ -610,7 +610,7 @@ reg.data %>%
 
 #### Examinando os dados -- gráfico de dispersão {-}
 
-A Figura abaixo apresenta um gráfico de dispersão das variáveis **tannin** e **growth**.
+A figura abaixo apresenta um gráfico de dispersão das variáveis **tannin** e **growth**.
 
 ```{r}
 library(ggplot2)
