@@ -28,7 +28,7 @@ library(tidyverse)
 1. **Homicídio e suicídio**. A prevenção do suicídio é um problema importante encarado pelos trabalhadores da saúde mental. A previsão de regiões geográficas onde o risco de suicídio é alto poderia ajudar as pessoas a decidir onde aumentar ou melhorar os recursos e cuidados com a saúde. Alguns psiquiatras argumentaram que homicídio e suicídio podem ter algumas causas em comum. Nesse caso, seria de se esperar que as taxas de homicídio e suicídio fossem correlacionadas. E se isso é verdade, áreas com altas taxas de homicídio poderiam ter previsão de altas taxas de suicídio e, portanto, merecedoras de mais recursos para a saúde mental. A pesquisa tem tido resultados mistos, incluindo alguma evidência de que há uma correlação positiva em certos países europeus, mas não nos EUA. Eis os dados de 2015 para 11 condados em Ohio com dados suficientes para homicídios e suicídios para permitir uma estimativa de taxas para ambos. As taxas são por 100 mil pessoas. 
 
 ```{r}
-homicidiosuicidio <- read_csv("homicidiosuicidio.csv")
+homicidiosuicidio <- read_csv("../datasets/homicidiosuicidio.csv")
 ```
 
 ```{r}
@@ -59,7 +59,7 @@ ggplot(homicidiosuicidio) +
 2. **Terceirização pelas companhias aéreas**. As companhias aéreas têm terceirizado, de modo crescente, a manutenção de suas aeronaves para outras companhias. Uma preocupação externada por críticos é que a manutenção pode ser feita de maneira menos cuidadosa, de modo que a terceirização cria uma condição de perigo. Além disso, os atrasos são constantes, devido a problemas de manutenção, de modo que se devem examinar os dados do governo sobre percentuais das principais manutenções terceirizadas e percentuais de atrasos em voos atribuídos à companhia, para determinar se a preocupação se justifica. Isso foi feito e os dados de 2005 e 2006 parecem justificar a preocupação dos críticos. Dados mais recentes justificam essa preocupação? Eis os dados para 2018.
 
 ```{r}
-terceirizacao <- read_csv("terceirizacao.csv")
+terceirizacao <- read_csv("../datasets/terceirizacao.csv")
 ```
 
 ```{r}
@@ -90,7 +90,7 @@ terceirizacao %>%
 3. **Dirigir rápido desperdiça gasolina?** Como muda o consumo de gasolina de um carro quando sua velocidade aumenta? A seguir, estão os dados para um Volkawagen Jetta Diesel de 2013. A velocidade foi medida em milhas por hora, e o consumo de combustível, em milhas por galão.
 
 ```{r}
-consumo_x_velocidade <- read_csv("consumo_x_velocidade.csv")
+consumo_x_velocidade <- read_csv("../datasets/consumo_x_velocidade.csv")
 ```
 
 ```{r}
@@ -274,7 +274,7 @@ Os valores coincidem, dentro dos erros de arredondamento.
 5. **Aquecimento global**. As temperaturas médias globais têm aumentado nos anos recentes? Aqui estão as temperaturas médias globais anuais para os últimos 25 anos, em graus Celsius:
 
 ```{r}
-aquecglobal <- read_csv("aquecimentoglobal.csv")
+aquecglobal <- read_csv("../datasets/aquecimentoglobal.csv")
 ```
 
 ```{r}
