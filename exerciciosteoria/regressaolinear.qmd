@@ -612,7 +612,7 @@ reg.data %>%
 
 A Figura abaixo apresenta um gráfico de dispersão das variáveis **tannin** e **growth**.
 
-```{r grfexpl, tidy=TRUE , fig.align='center', tidy.opts=list(width.cutoff=40), out.width='12cm', fig.cap='Gráfico de dispersão exploratório'}
+```{r}
 library(ggplot2)
 library(ggpubr)
 p <- ggplot(data = reg.data, aes(x = tannin, y = growth)) + 
