@@ -50,7 +50,7 @@ Pela @tbl-gradontime, agora sabemos que as taxas de graduação no prazo no Ensi
 #| warning: false
 #| message: false
 library(readr)
-tabela1_1 <- read_csv("tabela1_1.csv")
+tabela1_1 <- read_csv("../datasets/tabela1_1.csv")
 ```
 ```{r}
 tabela1_1 <- tabela1_1 %>%

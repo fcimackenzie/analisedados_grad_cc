@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mário Olímpio de Menezes">
+<meta name="dcterms.date" content="2022-02-04">
+
+<title>Análise de Dados - Análise de Modelos de Regressão Linear</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Análise de Dados</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">Sobre</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../textos/regressaolinear.html">Textos (slides, docs)</a></li><li class="breadcrumb-item"><a href="../textos/DiagnosticoHipotesesMetodoMinimosQuadrados.html">Diagnósticos de Modelos MMQ</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Textos (slides, docs)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../textos/regressaolinear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelos, Regressão Linear</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../textos/DiagnosticoHipotesesMetodoMinimosQuadrados.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Diagnósticos de Modelos MMQ</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Exercícios</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/organizacaoprobestatistico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Organização de um problema estatístico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/diagramasdispersaocorrelacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diagramas Dispersão e Correlação</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#usando-o-pacote-lmtest-para-avaliar-o-modelo" id="toc-usando-o-pacote-lmtest-para-avaliar-o-modelo" class="nav-link active" data-scroll-target="#usando-o-pacote-lmtest-para-avaliar-o-modelo">Usando o pacote <code>lmtest</code> para avaliar o modelo</a></li>
+  <li><a href="#usando-o-pacote-olsrr" id="toc-usando-o-pacote-olsrr" class="nav-link" data-scroll-target="#usando-o-pacote-olsrr">Usando o pacote <code>olsrr</code></a>
+  <ul class="collapse">
+  <li><a href="#testes-para-detectar-a-violação-da-hipótese-de-normalidade" id="toc-testes-para-detectar-a-violação-da-hipótese-de-normalidade" class="nav-link" data-scroll-target="#testes-para-detectar-a-violação-da-hipótese-de-normalidade">Testes para detectar a violação da hipótese de normalidade</a></li>
+  </ul></li>
+  <li><a href="#usando-o-pacote-gvlma" id="toc-usando-o-pacote-gvlma" class="nav-link" data-scroll-target="#usando-o-pacote-gvlma">Usando o pacote <code>gvlma</code></a></li>
+  <li><a href="#usando-o-pacote-easystats-e-outros" id="toc-usando-o-pacote-easystats-e-outros" class="nav-link" data-scroll-target="#usando-o-pacote-easystats-e-outros">Usando o pacote <code>easystats</code> e outros</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Análise de Modelos de Regressão Linear</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mário Olímpio de Menezes </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 4, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>como as variáveis que utilizaremos não precisam de ajustes, vamos direto ao modelo</p>
+</blockquote>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size + city.mpg, 
+    data = autos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9697.0 -1745.7    24.9  1389.4 12904.6 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -28480.00    7114.51  -4.003 8.99e-05 ***
+horsepower      52.74      16.62   3.174 0.001756 ** 
+length         114.58      32.30   3.548 0.000491 ***
+engine.size    115.32      12.92   8.922 4.06e-16 ***
+city.mpg        61.51      83.05   0.741 0.459849    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3499 on 188 degrees of freedom
+Multiple R-squared:  0.8168,    Adjusted R-squared:  0.8129 
+F-statistic: 209.5 on 4 and 188 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<p>A variável <code>city.mpg</code> não tem significância estatística no nosso modelo, então vamos removê-la e atualizar o modelo.</p>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9351.8 -1808.5    87.3  1351.9 13043.5 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -24227.12    4195.20  -5.775 3.12e-08 ***
+horsepower      44.60      12.44   3.585 0.000429 ***
+length         102.48      27.83   3.683 0.000301 ***
+engine.size    117.33      12.62   9.296  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3495 on 189 degrees of freedom
+Multiple R-squared:  0.8162,    Adjusted R-squared:  0.8133 
+F-statistic: 279.8 on 3 and 189 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<p>Agora todas as variáveis tem significância estatística, e nosso modelo consegue explicar aproximadamente 81.3% da variabilidade da variável alvo, <code>price</code>.</p>
+<p>Próxima etapa, os gráficos diagnósticos.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-grafdiag" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/fig-grafdiag-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Gráficos Diagnósticos</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Os gráficos diagnósticos não estão tão fáceis de interpretar; então podemos utilizar pacotes do <strong>R</strong> específicos para isso. Um destes pacotes é o <code>lmtest</code>.</p>
+<section id="usando-o-pacote-lmtest-para-avaliar-o-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="usando-o-pacote-lmtest-para-avaliar-o-modelo">Usando o pacote <code>lmtest</code> para avaliar o modelo</h2>
+<p>Vamos utilizar a função <code>bptest</code> que executa o teste de Breusch-Pagan, que ajusta um modelo linear de regressão aos resíduos de um modelo de regressão linear (por <em>default</em> as mesmas variáveis explicativas são utilizadas como no modelo principal de regressão) e rejeita se muito da variância é explicada pelas variáveis explanatórias adicionais.</p>
+<p>A hipótese nula do teste é que o modelo tem variância constante, ou seja, é um teste de homocedasticidade do nosso modelo.</p>
+<div class="cell">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  modtr05p1a
+BP = 67.363, df = 3, p-value = 1.566e-14</code></pre>
+</div>
+<p>Por este teste, temos que rejeitar a hipótese nula de que o modelo tem variância constante.</p>
+</section>
+<section id="usando-o-pacote-olsrr" class="level2">
+<h2 class="anchored" data-anchor-id="usando-o-pacote-olsrr">Usando o pacote <code>olsrr</code></h2>
+<p>O pacote <code>olsrr</code> oferece algumas ferramentas para detectar violações das hipóteses padrão da regressão. Vamos examinar apenas algumas funcionalidades, neste caso, o diagnóstico dos resíduos. As hipóteses padrão da regressão incluem as seguintes premissas sobre os resíduos/erros:</p>
+<ul>
+<li>O erro tem uma distribuição normal (hipótese de normalidade)</li>
+<li>O erro tem média zero.</li>
+<li>Os erros tem variância constante (mas desconhecida) – hipótese de homocedasticidade.</li>
+<li>Os erros são independentes uns dos outros (hipótese de erros independentes).</li>
+</ul>
+<section id="testes-para-detectar-a-violação-da-hipótese-de-normalidade" class="level3">
+<h3 class="anchored" data-anchor-id="testes-para-detectar-a-violação-da-hipótese-de-normalidade">Testes para detectar a violação da hipótese de normalidade</h3>
+<div class="cell">
+<pre><code>-----------------------------------------------
+       Test             Statistic       pvalue  
+-----------------------------------------------
+Shapiro-Wilk              0.9625          1e-04 
+Kolmogorov-Smirnov        0.1023         0.0353 
+Cramer-von Mises         16.1468         0.0000 
+Anderson-Darling          2.5759         0.0000 
+-----------------------------------------------</code></pre>
+</div>
+<p>Pelos resultados dos testes acima, todos os <code>p-value</code>s estão na região de rejeição da hipótese nula, ou seja, os resíduos não seguem uma distribuição normal.</p>
+</section>
+</section>
+<section id="usando-o-pacote-gvlma" class="level2">
+<h2 class="anchored" data-anchor-id="usando-o-pacote-gvlma">Usando o pacote <code>gvlma</code></h2>
+<p>O pacote <code>gvlma</code> é uma implementação do artigo de Pena &amp; Slate called “Global Validation of Linear Model Assumptions” e nos permite verificar rapidamente por:</p>
+<ul>
+<li>Linearidade – o teste <strong>Global Stat</strong> testa a hipótese nula de que nosso modelo é uma combinação linear das preditoras.</li>
+<li>Heterocedasticidade – o teste correspondente testa a hipótese nula de que a variância dos nossos resíduos é relativamente constante.</li>
+<li>Normalidade – testa distorções na distribuição dos resíduos ( <em>skewness</em> e <em>curtose</em> ), para entendermos se os resíduos do modelo seguem uma distribuição normal. Se a hipótese nula é rejeitada, provavelmente é necessária uma transformação nos dados (p.explo, uma transformação <strong>log</strong>). Podemos observar isso visualmente no <em>QQ-Plot</em>.</li>
+<li><em>Link Function</em> – testa se nossa variável dependente é realmente contínua, ou categórica. Se a hipótese nula é rejeitada (<code>p-value</code> &lt; 0.05), é uma indicação de que deveríamos utilizar uma forma alternativa do modelo linear generalizado (p.explo, Regressão Logística ou Binomial, etc).</li>
+</ul>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9351.8 -1808.5    87.3  1351.9 13043.5 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -24227.12    4195.20  -5.775 3.12e-08 ***
+horsepower      44.60      12.44   3.585 0.000429 ***
+length         102.48      27.83   3.683 0.000301 ***
+engine.size    117.33      12.62   9.296  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3495 on 189 degrees of freedom
+Multiple R-squared:  0.8162,    Adjusted R-squared:  0.8133 
+F-statistic: 279.8 on 3 and 189 DF,  p-value: &lt; 2.2e-16
+
+
+ASSESSMENT OF THE LINEAR MODEL ASSUMPTIONS
+USING THE GLOBAL TEST ON 4 DEGREES-OF-FREEDOM:
+Level of Significance =  0.05 
+
+Call:
+ gvlma(x = modtr05p1a) 
+
+                    Value   p-value                   Decision
+Global Stat        30.770 3.411e-06 Assumptions NOT satisfied!
+Skewness            4.062 4.387e-02 Assumptions NOT satisfied!
+Kurtosis           22.457 2.150e-06 Assumptions NOT satisfied!
+Link Function       2.244 1.342e-01    Assumptions acceptable.
+Heteroscedasticity  2.008 1.565e-01    Assumptions acceptable.</code></pre>
+</div>
+<p>Como vemos do teste acima, nosso modelo passa no teste de Heterocedasticidade e da Função Link (nossa variável resposta é contínua), mas falha na normalidade dos resíduos e na combinação linear das preditoras.</p>
+<p>Às vezes, o modelo pode ser melhorado removendo-se pontos indicados como <em>outliers</em>, ou seja, primeiro faz-se uma limpeza dos dados e então cria-se um novo modelo. Muitas vezes, a remoção de <em>outliers</em> é suficiente para fazer com que o modelo passe nos testes. Os <em>outliers</em> que vamos remover estão indicados no gráfico QQ-plot na Figura <a href="#fig-grafdiag">Figure&nbsp;1</a>.</p>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos[-c(120, 
+    16, 46), ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9023.6 -1732.9   127.2  1488.0  9605.7 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -24194.83    3914.71  -6.180 3.95e-09 ***
+horsepower      34.15      11.63   2.936 0.003748 ** 
+length         102.25      26.36   3.879 0.000146 ***
+engine.size    125.15      11.90  10.515  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3195 on 186 degrees of freedom
+Multiple R-squared:  0.822, Adjusted R-squared:  0.8191 
+F-statistic: 286.3 on 3 and 186 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos[-c(120, 
+    16, 46), ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9023.6 -1732.9   127.2  1488.0  9605.7 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -24194.83    3914.71  -6.180 3.95e-09 ***
+horsepower      34.15      11.63   2.936 0.003748 ** 
+length         102.25      26.36   3.879 0.000146 ***
+engine.size    125.15      11.90  10.515  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3195 on 186 degrees of freedom
+Multiple R-squared:  0.822, Adjusted R-squared:  0.8191 
+F-statistic: 286.3 on 3 and 186 DF,  p-value: &lt; 2.2e-16
+
+
+ASSESSMENT OF THE LINEAR MODEL ASSUMPTIONS
+USING THE GLOBAL TEST ON 4 DEGREES-OF-FREEDOM:
+Level of Significance =  0.05 
+
+Call:
+ gvlma(x = modtr05p1b) 
+
+                     Value   p-value                   Decision
+Global Stat        20.1508 0.0004663 Assumptions NOT satisfied!
+Skewness            0.3065 0.5798659    Assumptions acceptable.
+Kurtosis            5.4282 0.0198143 Assumptions NOT satisfied!
+Link Function      14.1317 0.0001704 Assumptions NOT satisfied!
+Heteroscedasticity  0.2845 0.5937924    Assumptions acceptable.</code></pre>
+</div>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos[-c(120, 
+    16, 46, 117, 93, 91, 116), ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9200.8 -1729.2   119.1  1394.6  9314.9 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -24062.87    3831.32  -6.281 2.41e-09 ***
+horsepower      35.29      11.41   3.093 0.002293 ** 
+length         100.18      25.85   3.875 0.000149 ***
+engine.size    126.55      11.59  10.917  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3108 on 182 degrees of freedom
+Multiple R-squared:  0.8336,    Adjusted R-squared:  0.8309 
+F-statistic:   304 on 3 and 182 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos[-c(120, 
+    16, 46, 117, 93, 91, 116, 113, 112, 64, 91), ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9029.6 -1749.6   110.1  1353.0  9579.6 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -25039.20    3860.18  -6.487 8.31e-10 ***
+horsepower      37.39      11.42   3.273  0.00128 ** 
+length         108.60      26.15   4.153 5.07e-05 ***
+engine.size    120.65      11.93  10.115  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3099 on 179 degrees of freedom
+Multiple R-squared:  0.828, Adjusted R-squared:  0.8251 
+F-statistic: 287.2 on 3 and 179 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<pre><code>
+Call:
+lm(formula = price ~ horsepower + length + engine.size, data = autos[-c(120, 
+    16, 46, 117, 93, 91, 116, 113, 112, 64, 91), ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9029.6 -1749.6   110.1  1353.0  9579.6 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -25039.20    3860.18  -6.487 8.31e-10 ***
+horsepower      37.39      11.42   3.273  0.00128 ** 
+length         108.60      26.15   4.153 5.07e-05 ***
+engine.size    120.65      11.93  10.115  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3099 on 179 degrees of freedom
+Multiple R-squared:  0.828, Adjusted R-squared:  0.8251 
+F-statistic: 287.2 on 3 and 179 DF,  p-value: &lt; 2.2e-16
+
+
+ASSESSMENT OF THE LINEAR MODEL ASSUMPTIONS
+USING THE GLOBAL TEST ON 4 DEGREES-OF-FREEDOM:
+Level of Significance =  0.05 
+
+Call:
+ gvlma(x = modtr05p1d) 
+
+                     Value   p-value                   Decision
+Global Stat        23.4321 0.0001038 Assumptions NOT satisfied!
+Skewness            0.9132 0.3392608    Assumptions acceptable.
+Kurtosis            6.5750 0.0103421 Assumptions NOT satisfied!
+Link Function      15.7032 0.0000741 Assumptions NOT satisfied!
+Heteroscedasticity  0.2407 0.6237162    Assumptions acceptable.</code></pre>
+</div>
+<p>Este processo poderia continuar, mas não parece ser o mais adequado. Uma inspeção mais detalhada dos dados pode ser uma abordagem melhor. Um modelo que envolva alguma variável categórica, como o <em>fabricante</em>, etc, pode resultar em um modelo mais específico para categorias de carros e assim o modelo pode passar nos testes sobre as hipóteses do método dos mínimos quadrados.</p>
+</section>
+<section id="usando-o-pacote-easystats-e-outros" class="level2">
+<h2 class="anchored" data-anchor-id="usando-o-pacote-easystats-e-outros">Usando o pacote <code>easystats</code> e outros</h2>
+<p>Como já vimos, um aspecto crucial quando criamos modelos de regressão é avaliar a qualidade do modelo ajustado. Investigamos o quão bem o modelo se ajusta aos dados e quais índices do ajuste devem ser reportado.</p>
+<p>Existem algumas funções para se criar os gráficos diagnósticos – como vimos acima, mas, elas estão espalhadas em vários pacotes do <strong>R</strong>.</p>
+<p>O pacote <code>performance</code> da coleção do <code>easystats</code> tem como meta preencher esse gap e prover funcionalidades para se computar diversos índices de qualidade do modelo e qualidade do ajuste. Estas medidas incluem o <strong>R-quadrado</strong> (<span class="math inline">r^2</span>), o <code>RMSE</code> (<em>root mean squared error</em>) ou o coeficiente de correlação intraclasse (ICC), mas também tem funções para a verificação do modelo com relação a <em>overdispersion</em>, <em>zero-inflation</em>, <em>convergência</em> e <em>singularidade</em>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="DiagnosticoHipotesesMetodoMinimosQuadrados_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

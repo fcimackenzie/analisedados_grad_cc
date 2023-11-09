@@ -2,6 +2,6 @@
 title: "Análise de Dados"
 ---
 
-Disciplina Análise de Dados
+Coleção de textos, slides e exercícios sobre Análise de Dados, Machine Learning e tópicos relacionados.
 
 

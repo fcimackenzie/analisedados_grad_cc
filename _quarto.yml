@@ -13,14 +13,19 @@ website:
     style: "docked"
     search: true
     contents:
-      - section: "Slides"
+      - section: "Textos (slides, docs)"
         contents:
+          - href: textos/regressaolinear.qmd
+            text: Modelos, Regressão Linear
+          - href: textos/DiagnosticoHipotesesMetodoMinimosQuadrados.qmd
+            text: Diagnósticos de Modelos MMQ
       - section: "Exercícios"
         contents:
           - href: exerciciosteoria/organizacaoprobestatistico.qmd
             text: Organização de um problema estatístico
           - href: exerciciosteoria/diagramasdispersaocorrelacao.qmd
             text: Diagramas Dispersão e Correlação
+
 format:
   html:
     theme: cosmo

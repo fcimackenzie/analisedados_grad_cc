@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Análise de Dados">
+
+<title>Análise de Dados - Modelos e Regressão Linear</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Análise de Dados</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Procurar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Alternar de navegação" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">Sobre</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../textos/regressaolinear.html">Textos (slides, docs)</a></li><li class="breadcrumb-item"><a href="../textos/regressaolinear.html">Modelos, Regressão Linear</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Procurar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Textos (slides, docs)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../textos/regressaolinear.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Modelos, Regressão Linear</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../textos/DiagnosticoHipotesesMetodoMinimosQuadrados.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diagnósticos de Modelos MMQ</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Exercícios</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/organizacaoprobestatistico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Organização de um problema estatístico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exerciciosteoria/diagramasdispersaocorrelacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diagramas Dispersão e Correlação</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#modelagem-estatística" id="toc-modelagem-estatística" class="nav-link active" data-scroll-target="#modelagem-estatística">Modelagem Estatística</a>
+  <ul class="collapse">
+  <li><a href="#método-estatístico-apropriado" id="toc-método-estatístico-apropriado" class="nav-link" data-scroll-target="#método-estatístico-apropriado">Método Estatístico Apropriado</a></li>
+  <li><a href="#objetivo-da-modelagem-estatística" id="toc-objetivo-da-modelagem-estatística" class="nav-link" data-scroll-target="#objetivo-da-modelagem-estatística">Objetivo da Modelagem Estatística</a></li>
+  <li><a href="#especificando-o-modelo" id="toc-especificando-o-modelo" class="nav-link" data-scroll-target="#especificando-o-modelo">Especificando o modelo</a>
+  <ul class="collapse">
+  <li><a href="#primeiros-passos" id="toc-primeiros-passos" class="nav-link" data-scroll-target="#primeiros-passos">Primeiros passos</a></li>
+  <li><a href="#checklist-da-modelagem-estatística" id="toc-checklist-da-modelagem-estatística" class="nav-link" data-scroll-target="#checklist-da-modelagem-estatística">Checklist da Modelagem Estatística</a></li>
+  <li><a href="#sobre-o-modelo" id="toc-sobre-o-modelo" class="nav-link" data-scroll-target="#sobre-o-modelo">Sobre o Modelo</a></li>
+  <li><a href="#máxima-verosimilhança-maximum-lilkelihood" id="toc-máxima-verosimilhança-maximum-lilkelihood" class="nav-link" data-scroll-target="#máxima-verosimilhança-maximum-lilkelihood">Máxima Verosimilhança – Maximum lilkelihood</a></li>
+  </ul></li>
+  <li><a href="#o-princípio-da-parcimônia-navalha-de-occam" id="toc-o-princípio-da-parcimônia-navalha-de-occam" class="nav-link" data-scroll-target="#o-princípio-da-parcimônia-navalha-de-occam">O princípio da parcimônia (navalha de Occam)</a></li>
+  </ul></li>
+  <li><a href="#regressão-linear" id="toc-regressão-linear" class="nav-link" data-scroll-target="#regressão-linear">Regressão Linear</a>
+  <ul class="collapse">
+  <li><a href="#análise-de-regressão" id="toc-análise-de-regressão" class="nav-link" data-scroll-target="#análise-de-regressão">Análise de Regressão</a>
+  <ul class="collapse">
+  <li><a href="#a-análise-de-regressão-tem-vários-possíveis-objetivos-incluindo" id="toc-a-análise-de-regressão-tem-vários-possíveis-objetivos-incluindo" class="nav-link" data-scroll-target="#a-análise-de-regressão-tem-vários-possíveis-objetivos-incluindo">A Análise de Regressão tem vários possíveis objetivos, incluindo:</a></li>
+  <li><a href="#história" id="toc-história" class="nav-link" data-scroll-target="#história">História</a></li>
+  </ul></li>
+  <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear">Modelo Linear</a></li>
+  <li><a href="#ajustando-um-modelo-linear" id="toc-ajustando-um-modelo-linear" class="nav-link" data-scroll-target="#ajustando-um-modelo-linear">Ajustando um modelo linear</a></li>
+  <li><a href="#ajustando-um-modelo-linear-primeira-abordagem" id="toc-ajustando-um-modelo-linear-primeira-abordagem" class="nav-link" data-scroll-target="#ajustando-um-modelo-linear-primeira-abordagem">Ajustando um modelo linear – primeira abordagem</a>
+  <ul class="collapse">
+  <li><a href="#somas-corrigidas-dos-quadrados-e-soma-dos-produtos" id="toc-somas-corrigidas-dos-quadrados-e-soma-dos-produtos" class="nav-link" data-scroll-target="#somas-corrigidas-dos-quadrados-e-soma-dos-produtos">Somas corrigidas dos quadrados e soma dos produtos</a></li>
+  </ul></li>
+  <li><a href="#somas-corrigidas-evitando-erros-de-arredondamento" id="toc-somas-corrigidas-evitando-erros-de-arredondamento" class="nav-link" data-scroll-target="#somas-corrigidas-evitando-erros-de-arredondamento">Somas corrigidas – evitando erros de arredondamento</a>
+  <ul class="collapse">
+  <li><a href="#calculando-os-parâmetros" id="toc-calculando-os-parâmetros" class="nav-link" data-scroll-target="#calculando-os-parâmetros">Calculando os parâmetros</a></li>
+  <li><a href="#incertezas-nas-estimativas-dos-parâmetros" id="toc-incertezas-nas-estimativas-dos-parâmetros" class="nav-link" data-scroll-target="#incertezas-nas-estimativas-dos-parâmetros">Incertezas nas estimativas dos parâmetros</a></li>
+  </ul></li>
+  <li><a href="#verificando-o-ajuste-do-modelo-linear-r2" id="toc-verificando-o-ajuste-do-modelo-linear-r2" class="nav-link" data-scroll-target="#verificando-o-ajuste-do-modelo-linear-r2">Verificando o ajuste do Modelo Linear – <span class="math inline">\(R^2\)</span></a>
+  <ul class="collapse">
+  <li><a href="#significado-do-r2-ajustado" id="toc-significado-do-r2-ajustado" class="nav-link" data-scroll-target="#significado-do-r2-ajustado">Significado do <span class="math inline">\(R^2\)</span> ajustado</a></li>
+  <li><a href="#problemas-com-o-r2-que-são-corrigidos-pelo-r2_ajustado" id="toc-problemas-com-o-r2-que-são-corrigidos-pelo-r2_ajustado" class="nav-link" data-scroll-target="#problemas-com-o-r2-que-são-corrigidos-pelo-r2_ajustado">Problemas com o <span class="math inline">\(R^2\)</span> que são corrigidos pelo <span class="math inline">\(R^2_{ajustado}\)</span></a></li>
+  </ul></li>
+  <li><a href="#análise-de-variância-para-regressão-linear" id="toc-análise-de-variância-para-regressão-linear" class="nav-link" data-scroll-target="#análise-de-variância-para-regressão-linear">Análise de Variância para Regressão Linear</a></li>
+  <li><a href="#análise-de-regressão-exemplo-2" id="toc-análise-de-regressão-exemplo-2" class="nav-link" data-scroll-target="#análise-de-regressão-exemplo-2">Análise de Regressão – Exemplo 2</a></li>
+  <li><a href="#diagnósticos-da-regressão" id="toc-diagnósticos-da-regressão" class="nav-link" data-scroll-target="#diagnósticos-da-regressão">Diagnósticos da Regressão</a></li>
+  <li><a href="#gráficos-diagnósticos-da-regressão" id="toc-gráficos-diagnósticos-da-regressão" class="nav-link" data-scroll-target="#gráficos-diagnósticos-da-regressão">Gráficos Diagnósticos da Regressão</a>
+  <ul class="collapse">
+  <li><a href="#topo-esquerda" id="toc-topo-esquerda" class="nav-link" data-scroll-target="#topo-esquerda">Topo-esquerda</a></li>
+  <li><a href="#topo-direita" id="toc-topo-direita" class="nav-link" data-scroll-target="#topo-direita">Topo-direita</a></li>
+  </ul></li>
+  <li><a href="#usando-o-pacote-lmtest-para-avaliar-o-modelo" id="toc-usando-o-pacote-lmtest-para-avaliar-o-modelo" class="nav-link" data-scroll-target="#usando-o-pacote-lmtest-para-avaliar-o-modelo">Usando o pacote <code>lmtest</code> para avaliar o modelo</a></li>
+  </ul></li>
+  <li><a href="#exercícios" id="toc-exercícios" class="nav-link" data-scroll-target="#exercícios">Exercícios</a>
+  <ul class="collapse">
+  <li><a href="#exercício-1" id="toc-exercício-1" class="nav-link" data-scroll-target="#exercício-1">Exercício 1</a></li>
+  <li><a href="#exercício-2" id="toc-exercício-2" class="nav-link" data-scroll-target="#exercício-2">Exercício 2</a></li>
+  <li><a href="#exercício-3" id="toc-exercício-3" class="nav-link" data-scroll-target="#exercício-3">Exercício 3</a>
+  <ul class="collapse">
+  <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Modelos e Regressão Linear</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor</div>
+    <div class="quarto-title-meta-contents">
+             <p>Análise de Dados </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="modelagem-estatística" class="level1">
+<h1>Modelagem Estatística</h1>
+<p>Modelagem Estatística é um dos aspectos mais importantes ao se lidar com dados; é um tipo de sumário dos dados.</p>
+<p>Um sumário pode ser uma maneira de se encapsular alguns padrões dos dados. Através da modelagem estatística capturamos tendências e comportamentos presentes nos dados, condensamos toda a informação dos dados para lidarmos mais facilmente ela.</p>
+<p>O modelo estatístico difere do <em>modelo matemático</em>. Enquanto este é derivado apenas de fórmulas, conceitos e manipulações matemáticas, o modelo estatístico é baseado nos dados.</p>
+<p>Nesta Trilha abordaremos a Modelagem Estatística, específicamente a Regressão Linear e a Análise de Variância.</p>
+<p>Começamos com uma apresentação mais cuidadosa do tema Modelagem Estatística, passamos em seguida a Regressão Linear (Modelos Lineares) e finalizamos com Análise de Variância.</p>
+<p>Serão apresentados exemplos de códigos em <strong>R</strong>, tanto para os cálculos manuais como utilizando as funções disponíveis no software.</p>
+<p>A parte mais difícil de qualquer trabalho estatístico é … começar! E uma das coisas mais difíceis quando se começa é a escolha do tipo correto de análise estatística. A escolha depende:</p>
+<ul>
+<li>da natureza dos dados</li>
+<li>da questão que se quer responder, entre outras coisas.</li>
+</ul>
+<p>A chave é entender que tipo de variável <em>resposta</em> você tem e saber a natureza de suas variáveis <em>explicativas</em>.</p>
+<ul>
+<li>A variável <em>resposta</em> é a coisa com a qual você está trabalhando:
+<ul>
+<li>é a variável cuja variação você está tentando entender!</li>
+<li>é a variável que vai no eixo <em>y</em> do gráfico.</li>
+</ul></li>
+<li>A variável <em>explicativa</em> vai no eixo <em>x</em> do gráfico.
+<ul>
+<li>você está interessado na extensão em que a variação da variável <em>resposta</em> está associada com a variação da variável <em>explicativa</em>.</li>
+</ul></li>
+</ul>
+<p>Você também precisa considerar o <em>modo</em> que as variáveis na sua análise medem o que elas se propõe a medir. Uma medida contínua é uma variável do tipo altura ou peso que pode assumir valores com números reais.</p>
+<p>Uma variável categórica é um fator com dois ou mais níveis:</p>
+<ul>
+<li>sexo é um fator com dois níveis (masculino e feminino)</li>
+<li>cor pode ser um fator com sete níveis (vermelho, laranja, amarelo, verde, azul, índigo e violeta)</li>
+</ul>
+<p>Portanto, é essencial responder às seguintes questões:</p>
+<ul>
+<li>Qual das variáveis é a variável resposta?</li>
+<li>Quais são as variáveis explicativas?</li>
+<li>As variáveis explicativas são contínuas ou categóricas, ou uma mistura de ambas?</li>
+<li>Que tipo de variável resposta temos:
+<ul>
+<li>é uma medida contínua? uma contagem? uma proporção? um tempo (ocasião) de morte? ou uma categoria?</li>
+</ul></li>
+</ul>
+<section id="método-estatístico-apropriado" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="método-estatístico-apropriado">Método Estatístico Apropriado</h2>
+<p>Algumas <em>chaves</em> simples para a escolha do método estatístico apropriado</p>
+<section id="as-variáveis-explicativas" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="as-variáveis-explicativas">As variáveis explicativas</h4>
+<ol type="1">
+<li>Todas as variáveis explicativas são contínuas <span class="math inline">\(\Rightarrow\)</span> <strong>Regressão</strong></li>
+<li>Todas as variáveis explicativas são categóricas <span class="math inline">\(\Rightarrow\)</span> <strong>Análise de Variância (ANOVA)</strong></li>
+<li>Variáveis explicativas são tanto contínuas como categóricas <span class="math inline">\(\Rightarrow\)</span> <strong>Análise de Covariância (ANCOVA)</strong></li>
+</ol>
+</section>
+<section id="a-variável-resposta" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="a-variável-resposta">A variável resposta</h4>
+<ol type="1">
+<li>Contínua <span class="math inline">\(\Rightarrow\)</span> <strong>Regressão Normal, ANOVA ou ANCOVA</strong></li>
+<li>Proporção <span class="math inline">\(\Rightarrow\)</span> <strong>Regressão Logística</strong></li>
+<li>Contagem <span class="math inline">\(\Rightarrow\)</span> <strong>Modelos log-linear</strong></li>
+<li>Binária <span class="math inline">\(\Rightarrow\)</span> <strong>Análise logística binária</strong></li>
+<li>Tempo na morte <span class="math inline">\(\Rightarrow\)</span> <strong>Análise de sobrevivência</strong></li>
+</ol>
+</section>
+</section>
+<section id="objetivo-da-modelagem-estatística" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="objetivo-da-modelagem-estatística">Objetivo da Modelagem Estatística</h2>
+<p>O objetivo da modelagem é determinar os valores dos parâmetros em um modelo específico que <em>levam ao melhor ajuste do modelo aos dados</em> Os dados são <em>sacrosantos</em>; eles nos dizem o que realmente aconteceu sob determinadas circunstâncias.</p>
+<ul>
+<li>É um erro comum dizer “os dados foram ajustados ao modelo” como se os dados fossem flexíveis, e nós tivéssemos uma estrutura clara do modelo.</li>
+<li>É o contrário: o que se procura é o modelo mínimo adequado que descreva os dados.</li>
+<li>O modelo é ajustado aos dados; não o contrário!</li>
+</ul>
+<p>O melhor modelo é o que produz o mínimo de variação não explicada (o <em>mínimo desvio dos resíduos</em>), sujeito à restrição de que todos os parâmetros no modelo devem ser estatisticamente significantes</p>
+</section>
+<section id="especificando-o-modelo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="especificando-o-modelo">Especificando o modelo</h2>
+<p>Um modelo incorpora nosso entendimento mecanicista das variáveis explicativas envolvidas, e da maneira que elas estão relacionadas com a variável resposta.</p>
+<p>Buscamos um modelo <strong>mínimo</strong> por conta do princípio da <em>parcimônia</em>, e também um modelo <strong>adequado</strong></p>
+<ul>
+<li>não há sentido em ter um modelo <em>inadequado</em>, que não descreve uma fração significante da variação dos dados.</li>
+</ul>
+<p>É muito importante entender que <em>não há <strong>um</strong> modelo</em>: <!--    + isso é um erro comum na regressão tradicional e ANOVA, reutilizar sem uma crítica do modelo. --></p>
+<ul>
+<li>em muitos casos, haverá um grande número de modelos diferentes, uns mais plausíveis do que outros, que podem ser ajustados a qualquer conjunto de dados.</li>
+</ul>
+<p>É preciso determinar quais, se algum, dos modelos possíveis são adequados:</p>
+<ul>
+<li>e depois, dos adequados, qual é o modelo mínimo adequado.</li>
+<li>pode haver um conjunto de modelos que descrevem os dados igualmente bem (ou igualmente probremente se a variabilidade é grande)</li>
+</ul>
+<section id="primeiros-passos" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="primeiros-passos">Primeiros passos</h3>
+<p>Um erro muito comum é tentar fazer a modelagem estatística direto. A melhor coisa a fazer é gastar um tempo substancial, logo de início, para entender os dados e o que eles mostram.</p>
+<ul>
+<li>Isto vai ajudar a guiar o pensamento para a modelagem estatística mais apropriada.</li>
+</ul>
+</section>
+<section id="checklist-da-modelagem-estatística" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="checklist-da-modelagem-estatística">Checklist da Modelagem Estatística</h3>
+<ul>
+<li>Certificar-se de que o dataframe está correto em estrutura e conteúdo:
+<ul>
+<li>Todos os valores de cada variável estão na mesma coluna?</li>
+<li>Todos os zeros são realmente 0 ou deveriam ser <code>NA</code>?</li>
+<li>Cada linha contém o mesmo número de entradas?</li>
+<li>Existe algum nome de variável que contém espaço?</li>
+</ul></li>
+<li>Depois de carregar os dados:
+<ul>
+<li>Examine a estrutura com <code>str</code> e certifique-se de as classes e tipos das variáveis estão corretos.</li>
+<li>Olhe no <code>head</code> e no <code>tail</code> dos dados e verifique possíveis erros.</li>
+<li>Plote cada variável individualmente para verificar erros mais grosseiros (<code>plot(x)</code>, <code>plot(y)</code>, <code>boxplot</code>, etc)</li>
+<li>Veja os relacionamentos entre as variáveis (use <code>tapply</code>, <code>plot</code>, <code>tree</code> e <code>gam</code>)</li>
+</ul></li>
+</ul>
+<p><span class="math inline">\(\Rightarrow\)</span> Ou seja, explore os dados primeiro!</p>
+</section>
+<section id="sobre-o-modelo" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sobre-o-modelo">Sobre o Modelo</h3>
+<p>Pense sobre a escolha do modelo:</p>
+<ul>
+<li>Quais variáveis explicativas deveriam ser incluídas?</li>
+<li>Que transformação da resposta é mais apropriada?</li>
+<li>Que interações deveriam ser incluídas?
+<ul>
+<li>Quais termos não lineares deveriam ser incluídos?</li>
+<li>Há alguma pseudo-replicação, e se houver, como se deve lidar com isso?</li>
+<li>As variáveis explicativas deveriam ser transformadas?</li>
+</ul></li>
+</ul>
+<p>Tente utilizar o tipo mais simples de análise que seja apropriado para seus dados e para a questão que está tentando responder:</p>
+<ul>
+<li>Faça uma ANOVA <em>one-way</em> ao invés de um modelo de efeitos mistos</li>
+</ul>
+<p>Ajuste um modelo máximo e vá simplificando-o paulatinamente ao remover parâmetros</p>
+<p>Verifique o modelo mínimo adequado em termos de constância de variância e normalidade dos erros utilizando <code>plot(model)</code></p>
+<p>Enfatize os tamanhos dos efeitos e erros padrões (<code>summary.lm</code>) e analise a tabela de desvios (<code>summary.aov</code>)</p>
+<p>Por fim, documente tudo o que fizer, e explique cada um dos passos. Desta maneira você entenderá o que fez e porque fez quando retornar à sua análise 6 meses mais tarde!</p>
+</section>
+<section id="máxima-verosimilhança-maximum-lilkelihood" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="máxima-verosimilhança-maximum-lilkelihood">Máxima Verosimilhança – Maximum lilkelihood</h3>
+<p>O que, exatamente, queremos dizer quando afirmamos que os valores dos parâmetros devem dar conta do <em>melhor ajuste do modelo aos dados</em> ?</p>
+<p>A convenção utilizada é que nossas técnicas devem levar a <strong>estimadores que minimizem a variância e sejam livres de viés</strong>.</p>
+<p>Nós definimos <strong>melhor</strong> em termos da “máxima verosimilhança”.</p>
+<p>Uma definição <em>funcional</em> para estes termos é:</p>
+<ul>
+<li>Dados os dados,</li>
+<li>e dada nossa escolha do modelo,</li>
+<li>quais valores dos parâmetros deste modelo</li>
+<li>farão os dados observados mais prováveis?</li>
+</ul>
+<p>Julgamos o modelo com base em <em>quão prováveis os dados seriam se o modelo estivesse correto</em>!</p>
+</section>
+</section>
+<section id="o-princípio-da-parcimônia-navalha-de-occam" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="o-princípio-da-parcimônia-navalha-de-occam">O princípio da parcimônia (navalha de Occam)</h2>
+<p>Uma das coisas mais importantes que fazemos na modelagem estatística diz respeito à simplificação de modelos.</p>
+<p>O princípio da parcimônia é atribuído a um filósofo nominalista britânico do século 14, William de Occam.</p>
+<p>Ele insistia que, dado um conjunto de explicações igualmente boas para um determinado fenômeno, <em>a explicação correta é a explicação mais simples</em>.</p>
+<p>Este princípio é chamado de “navalha de Occam” porque ele <em>cortava</em> suas explicações às formas mais simples: seu argumento era que, ao explicar algo, hipóteses não precisavam ser desnecessariamente multiplicadas.</p>
+<p>Para a modelagem estatística, o princípio da parcimônia significa que:</p>
+<ul>
+<li>modelos devem ter tão poucos parâmetros quanto possível;</li>
+<li>modelos lineares devem ser preferidos a modelos não-lineares;</li>
+<li>experimentos que dependem de poucas hipóteses devem ser preferidos em relação àqueles que dependem de muitas;</li>
+<li>modelos devem ser gradualmente reduzidos até que sejam <em>mínimos e adequados</em>;</li>
+<li>explicações simples devem ser preferidas às complexas.</li>
+</ul>
+<!-- do livro Practical Regression and ANOVA with R - de Julian J. Faraway -->
+</section>
+</section>
+<section id="regressão-linear" class="level1">
+<h1>Regressão Linear</h1>
+<section id="análise-de-regressão" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="análise-de-regressão">Análise de Regressão</h2>
+<p>A Análise de Regressão é utilizada para se explicar ou modelar o relacionamento entre uma única variável <span class="math inline">\(Y\)</span>, chamada de variável <em>resposta</em>, <em>de saída</em> ou <em>dependente</em> e uma ou mais variáveis <em>preditoras</em>, <em>de entrada</em> ou <em>explicativas</em>, <span class="math inline">\(X_1, X_2, ..., X_p\)</span>.</p>
+<p>Quando <span class="math inline">\(p = 1\)</span>, é chamada <strong>regressão simples</strong></p>
+<p>Quando <span class="math inline">\(p &gt; 1\)</span> é chamada <strong>regressão múltipla</strong> ou algumas vezes, <strong>regressão multivariada</strong>.</p>
+<p>A variável resposta deve ser uma variável contínua</p>
+<p>As variáveis explicativas podem ser contínuas, discretas ou categóricas.</p>
+<section id="a-análise-de-regressão-tem-vários-possíveis-objetivos-incluindo" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="a-análise-de-regressão-tem-vários-possíveis-objetivos-incluindo">A Análise de Regressão tem vários possíveis objetivos, incluindo:</h3>
+<ul>
+<li>Predição de observações futuras</li>
+<li>Avaliação do efeito de, ou do relacionamento entre, as variáveis explicativas sobre a resposta</li>
+<li>Uma descrição geral da estrutura dos dados</li>
+</ul>
+</section>
+<section id="história" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="história">História</h3>
+<p>Problemas do tipo regressão foram abordados primeiramente no século 18, e estavam relacionados ao uso da astronomia na navegação (<span class="citation" data-cites="farawayLMR2014">Faraway (<a href="#ref-farawayLMR2014" role="doc-biblioref">2014</a>)</span>).</p>
+<p>Legendre desenvolveu o método dos mínimos quadrados em 1805.</p>
+<p>Gauss disse que o tinha desenvolvido alguns anos antes e mostrou, em 1809, que os mínimos quadrados eram a solução ótima quando os erros tem uma distribuição normal.</p>
+<p>A metodologia ficou restrita às ciências físicas até a parte final do século 19, quando em 1875, Francis Galton cunhou o termo <em>regressão à mediocridade</em> (<span class="citation" data-cites="galton">Galton (<a href="#ref-galton" role="doc-biblioref">1886</a>)</span>).</p>
+</section>
+</section>
+<section id="modelo-linear" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="modelo-linear">Modelo Linear</h2>
+<p>Um <strong>modelo linear</strong> entre duas variáveis <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, é definido matematicamente como uma equação com dois parâmetros desconhecidos (<span class="citation" data-cites="peck-IntroStat">Peck, Olsen, e Devore (<a href="#ref-peck-IntroStat" role="doc-biblioref">2012</a>)</span>),</p>
+<p><span class="math display">\[ y = b_0 + b_1x \]</span> que é uma estimativa da linha de regressão verdadeira da população:</p>
+<p><span class="math display">\[\mu_y = \beta_0 + \beta_1 x\]</span></p>
+<p>Esta linha de regressão descreve como a resposta média <span class="math inline">\(\mu_y\)</span> muda com <span class="math inline">\(x\)</span>.</p>
+<p>Os valores observados para <span class="math inline">\(y\)</span> variam em torno da sua média <span class="math inline">\(\mu_y\)</span> e assumimos que tem o mesmo desvio padrão <span class="math inline">\(\sigma\)</span>.</p>
+<p>Os valores ajustados <span class="math inline">\(b_0\)</span> e <span class="math inline">\(b_1\)</span> estimam o verdadeiro <em>deslocamento</em> (<em>intercept</em>) e a inclinação da linha de regressão da população.</p>
+<p>Para fins de simplificação, indicamos <span class="math inline">\(Y \equiv \mu_y\)</span> na fórmula:</p>
+<p><span class="math display">\[ Y = \beta_0 + \beta_1 X \]</span></p>
+<p>Assim, dados <span class="math inline">\(n\)</span> pares de valores, <span class="math inline">\((X_1, Y_1), (X_2, Y_2), \ldots, (X_n, Y_n)\)</span>, se for admitido que <span class="math inline">\(Y\)</span> é função linear de <span class="math inline">\(X\)</span>, pode-se estabelecer uma regressão linear simples, cujo modelo estatístico é</p>
+<p><span class="math display">\[ Y_i = \beta_0 + \beta_1 X_i + e_i, \quad i = 1, 2, \ldots, n \]</span></p>
+</section>
+<section id="ajustando-um-modelo-linear" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="ajustando-um-modelo-linear">Ajustando um modelo linear</h2>
+<p>Como através de uma amostra obtemos uma estimativa da verdadeira equação de regressão, denominamos</p>
+<p><span class="math display">\[\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i \]</span></p>
+<p>ou seja, <span class="math inline">\(\hat{Y}_i\)</span> é o valor <strong>estimado</strong> de <span class="math inline">\(Y_i\)</span>, através das <strong>estimativas</strong> de <span class="math inline">\(\beta_0\)</span> e <span class="math inline">\(\beta_1\)</span>, que chamaremos de <span class="math inline">\(\hat{\beta}_0\)</span> e <span class="math inline">\(\hat{\beta}_1\)</span>. Para cada valor de <span class="math inline">\(Y_i\)</span>, temos um valor <span class="math inline">\(\hat{Y}_i\)</span> estimado pela equação de regressão,</p>
+<p><span class="math display">\[Y_i = \hat{Y}_i + e_i \]</span></p>
+<p>Ou seja, podemos expressar o modelo como: <code>DADOS = AJUSTE + RESÍDUO</code>, onde o termo <code>AJUSTE</code> representa a expressão <span class="math inline">\(\beta_0 + \beta_1 X\)</span>.</p>
+<p>Portanto, o resíduo (ou desvio) de cada observação em relação ao modelo adotado será</p>
+<p><span class="math display">\[\begin{array}{lll}
+    e_i &amp; = &amp; Y_i - \hat{Y}_i \\
+    e_i &amp; = &amp; Y_i - (\hat{\beta_0 }+ \hat{\beta_1} X_i)
+\end{array} \]</span></p>
+</section>
+<section id="ajustando-um-modelo-linear-primeira-abordagem" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="ajustando-um-modelo-linear-primeira-abordagem">Ajustando um modelo linear – primeira abordagem</h2>
+<p>Como parte das hipóteses da Regressão Linear, consideramos que os resíduos possuem uma distribuição normal com média zero e variância constante, ou seja, <span class="math inline">\(e_i \sim \text{N}(0, \sigma^2)\)</span>.</p>
+<p>A <strong>solução de mínimos quadrados</strong> vai determinar <span class="math inline">\(\hat{\beta_0}\)</span> e <span class="math inline">\(\hat{\beta_1}\)</span> que minimizam a soma dos quadrados dos resíduos (<em>residuals sum of squares</em> – RSS):</p>
+<p><span class="math display">\[\begin{array}{lll} \\
+  RSS &amp; = &amp; \sum_{i=1}^n(Y_i - \hat{Y_i})^2 \\
+      &amp; = &amp; \sum_{i=1}^n[y_i - (\beta_0 + \beta_1 x_i)]^2 \\
+      &amp; = &amp; \sum e_i^2 \\
+      &amp; = &amp; E \equiv E_2(\beta_0,\beta_1)
+  \end{array} \]</span></p>
+<p>Como se trata de uma função de duas variáveis, no processo de encontrar os pontos de mínimos, utilizamos derivadas de primeira ordem e as igualamos a zero:</p>
+<p><span class="math display">\[\frac{\partial E}{\partial \beta_0} = 0 \;\; \mbox { e }\;\; \frac{\partial E}{\beta_1} = 0\]</span> Expandindo as equações acima teremos: <span class="math display">\[0 = \frac{\partial }{\partial \beta_0}\sum_{i=1}^n[y_i - (\beta_0 + \beta_1 x_i)]^2 = 2 \sum_{i=1}^n(y_i - \beta_1x_i - \beta_0)(-1)\]</span> e <span class="math display">\[0 = \frac{\partial }{\partial \beta_0}\sum_{i=1}^n[y_i - (\beta_0 + \beta_1 x_i)]^2 = 2 \sum_{i=1}^n(y_i - \beta_1x_i - \beta_0)(-x_i)\]</span> Simplificando estas duas equações, chegamos a um sistema com duas equações e duas incógnitas, que resulta nas seguintes expressões para estimar os parâmetros <span class="math inline">\(\beta_0\)</span> e <span class="math inline">\(\beta_1\)</span>:</p>
+<p><span class="math display">\[\begin{array}{lll}
+    \hat{\beta}_1 &amp; = &amp; \frac{\sum_{i=1}^{n} X_iY_i - \frac{\sum_{i=1}^{n}
+        X_i \sum_{i=1}^{n} Y_i}{n}}{\sum_{i=1}^{n}X_i^2 -
+      \frac{(\sum_{i=1}^{n} X_i)^2}{n}} \\
+      &amp;  &amp; \\
+    \hat{\beta}_1  &amp; = &amp; \frac{n\sum_{i=1}^{n} X_iY_i - \sum_{i=1}^{n}
+        X_i \sum_{i=1}^{n} Y_i}{n\sum_{i=1}^{n}X_i^2 -
+      (\sum_{i=1}^{n} X_i)^2} \\
+      &amp;  &amp; \\
+  \hat{\beta}_0 &amp; = &amp; \frac{\sum_{i=1}^nX_i^2\sum_{i=1}^nY_i - \sum_{i=1}^nX_iY_i\sum_{i=1}^nX_i}{n\sum_{i=1}^{n}X_i^2 -
+      (\sum_{i=1}^{n} X_i)^2}  \\
+      &amp;  &amp; \\
+    \hat{\beta}_0 &amp; = &amp; \bar{Y} - \hat{\beta}_1 \bar{X}
+\end{array}
+\]</span></p>
+<p>onde</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \bar{Y} &amp; =  \frac{1}{n} \sum_{i=1}^{n} Y_i \qquad \text{e} \qquad \\
+    \bar{X} &amp; =  \frac{1}{n} \sum_{i=1}^{n} X_i
+\end{aligned}
+\]</span></p>
+<p>O processo envolve a determinação dos seguintes valores (juntamente com o <em>RSS</em> acima), conhecidos como os “famosos cinco no R”:</p>
+<ul>
+<li><span class="math inline">\(\sum Y_i^2\)</span></li>
+<li><span class="math inline">\(\sum Y_i\)</span></li>
+<li><span class="math inline">\(\sum X_i^2\)</span></li>
+<li><span class="math inline">\(\sum X_i\)</span></li>
+<li><span class="math inline">\(\sum X_iY_i\)</span></li>
+</ul>
+<section id="somas-corrigidas-dos-quadrados-e-soma-dos-produtos" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="somas-corrigidas-dos-quadrados-e-soma-dos-produtos">Somas corrigidas dos quadrados e soma dos produtos</h3>
+<p>Depois dos famosos cinco, vamos calcular três somas essenciais “corrigidas”.</p>
+<p><span class="math display">\[SSX = \sum x^2 - \frac{(\sum x)^2}{n}\]</span></p>
+<p><span class="math display">\[SSY = \sum y^2 - \frac{(\sum y)^2}{n}\]</span></p>
+<p>O terceiro termo é a soma corrigida dos produtos, <span class="math inline">\(SSXY\)</span>.</p>
+<p><span class="math display">\[SSXY = \sum xy - \frac{(\sum x)(\sum y)}{n} \]</span></p>
+</section>
+</section>
+<section id="somas-corrigidas-evitando-erros-de-arredondamento" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="somas-corrigidas-evitando-erros-de-arredondamento">Somas corrigidas – evitando erros de arredondamento</h2>
+<p>As expressões para os cálculos das somas corrigidas e soma dos produtos envolvem cálculos computacionais potencialmente perigosos em termos de precisão.</p>
+<p>Subtrações de valores grandes podem gerar erros de arredondamento consideráveis.</p>
+<p>Para evitar isso, podemos utilizar as seguintes fórmulas equivalentes:</p>
+<p><span class="math display">\[SSY = \sum(y - \bar{y})^2\]</span> <span class="math display">\[SSX = \sum(x - \bar{x})^2\]</span> <span class="math display">\[SSXY = \sum(y - \bar{y})(x - \bar{x})\]</span></p>
+<section id="calculando-os-parâmetros" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="calculando-os-parâmetros">Calculando os parâmetros</h3>
+<p>Os parâmetros do modelo (<span class="math inline">\(y = b_0 + b_1x\)</span>) podem ser determinados com os valores anteriores:</p>
+<p><span class="math display">\[b_1 = \frac{SSXY}{SSX}\]</span></p>
+<p>Uma parte da definição do melhor ajuste da linha reta é que ela passa através do ponto (<span class="math inline">\(\bar{x},\bar{y}\)</span>), determinado pelos valores médios de <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>.</p>
+<p>Como sabemos que <span class="math inline">\(y = b_0 + b_1x\)</span>, então também temos que <span class="math inline">\(\bar{y} = b_0 + b_1\bar{x}\)</span>.</p>
+<p>Assim:</p>
+<p><span class="math display">\[b_0 = \bar{y} - b_1\bar{x} = \frac{\sum y}{n} - b_1\frac{\sum x}{n}\]</span></p>
+</section>
+<section id="incertezas-nas-estimativas-dos-parâmetros" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="incertezas-nas-estimativas-dos-parâmetros">Incertezas nas estimativas dos parâmetros</h3>
+<section id="erro-padrão-na-inclinação" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="erro-padrão-na-inclinação">Erro padrão na inclinação</h4>
+<p>A incerteza na inclinação estimada aumenta com o aumento da variância e diminui com o aumento do número de pontos no gráfico.</p>
+<p>Além disso, a incerteza é maior quando a faixa de valores de <span class="math inline">\(x\)</span> (conforme medida por <code>SSX</code>) é pequena:</p>
+<p><span class="math display">\[se_{b_1} = \sqrt{\frac{MSE}{SSX}}\]</span></p>
+</section>
+<section id="erro-padrão-do-deslocamento" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="erro-padrão-do-deslocamento">Erro padrão do deslocamento</h4>
+<p>A incerteza do deslocamento estimado tem o mesmo comportamento da incerteza na inclinação com relação à variância, ao número de pontos e à faixa de valores de <span class="math inline">\(x\)</span>.</p>
+<p>Além disso, ela também aumenta com o quadrado da distância entre a origem e o valor médio de <span class="math inline">\(x\)</span> (conforme medido por <span class="math inline">\(\sum x^2\)</span>):</p>
+<p><span class="math display">\[se_{b_0} = \sqrt{\frac{MSE\sum x^2}{n \times SSX}}\]</span></p>
+</section>
+</section>
+</section>
+<section id="verificando-o-ajuste-do-modelo-linear-r2" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="verificando-o-ajuste-do-modelo-linear-r2">Verificando o ajuste do Modelo Linear – <span class="math inline">\(R^2\)</span></h2>
+<p>Depois de ajustado um modelo linear, podemos nos perguntar “O quão bem ele ajusta os dados?</p>
+<p>Uma medida deste <em>ajuste</em> é o <span class="math inline">\(R^2\)</span>:</p>
+<ul>
+<li><em>Coeficiente de determinação ou percentual da variância explicada</em></li>
+</ul>
+<p><span class="math display">\[R^2 = 1 - \frac{\sum(\hat{y}_i - y_i)^2}{\sum(y_i - \bar{y})^2} = 1 - \frac{\mbox{RSS}}{\mbox{SSY}} \]</span></p>
+<p>onde:</p>
+<ul>
+<li>RSS: <em>residual sum of squares</em> (soma dos quadrados dos resíduos)</li>
+<li>SSY: <em>sum of squares of response variable</em> (soma dos quadrados de <span class="math inline">\(y\)</span>)</li>
+</ul>
+<p>A faixa de <span class="math inline">\(R^2\)</span> é: <span class="math inline">\(0 \leq R^2 \leq 1\)</span> + Valores próximos a 1 indicam melhor ajuste. + Para regressão linear simples, <span class="math inline">\(R^2 = r^2\)</span>, onde <span class="math inline">\(r\)</span> é a correlação entre <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>. + Esta definição de <span class="math inline">\(R^2\)</span> só faz sentido se o modelo tem um <em>deslocamento</em>.</p>
+<p>O <span class="math inline">\(R\)</span>-quadrado obtido desta forma é chamado de <em><span class="math inline">\(R^2\)</span> múltiplo</em> – que é a fração da variância total explicada pelo modelo.</p>
+<p>Há um outro <span class="math inline">\(R\)</span>-quadrado que é o <strong>R-quadrado ajustado</strong>, cujo valor é muito próximo, mas tem uma definição um pouco diferente.</p>
+<p>Ao invés de ser baseado na soma dos quadrados dos resíduos (<code>RSS</code>) explicados e na soma total dos quadrados do modelo <code>SSY</code>, ele é baseado na variância global, dada por: <span class="math display">\[s^2_T = \frac{SSY}{(n-1)}\]</span></p>
+<p>e na variância do erro, <span class="math inline">\(s^2\)</span> – chamada de “Erro quadrado médio” (<code>MSE</code>), dado por: <span class="math display">\[\sum(y_i - \hat{y_i})^2/(n-2) = RSS/DFE\]</span></p>
+<p>onde <code>DFE</code> é o número de graus de liberdade no cálculo do erro (<span class="math inline">\(n-2\)</span>)</p>
+<p>Assim, o <strong><span class="math inline">\(R^2\)</span> ajustado</strong> será dado por:</p>
+<p><span class="math display">\[R^2_{ajustado} = \frac{s^2_T - s^2}{s^2_T}\]</span> <span class="math display">\[R^2_{ajustado} = \frac{\frac{SSY}{(n-1)} - MSE}{\frac{SSY}{(n-1)}}\]</span></p>
+<p>Outra maneira de se calcular o <strong>R quadrado ajustado</strong> é pela expressão: <span class="math display">\[R^2_{ajustado} = 1 - \left[\frac{(1 - R^2)(n - 1)}{n - k - 1} \right]\]</span> onde:</p>
+<ul>
+<li><span class="math inline">\(n\)</span> é o número de pontos nos dados da amostra;</li>
+<li><span class="math inline">\(k\)</span> é o número de regressores independentes, i.e., o número de variáveis no modelo, excluindo a constantae.</li>
+</ul>
+<section id="significado-do-r2-ajustado" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="significado-do-r2-ajustado">Significado do <span class="math inline">\(R^2\)</span> ajustado</h3>
+<p>Como vimos, tanto o <span class="math inline">\(R^2\)</span> como o <span class="math inline">\(R^2_{ajustado}\)</span> nos dão uma ideia de quantos pontos de dados caem dentro da equação de regressão. Contudo, há <strong>uma diferença principal</strong> entre o <span class="math inline">\(R^2\)</span> e o <span class="math inline">\(R^2_{ajustado}\)</span>: o <span class="math inline">\(R^2\)</span> assume que cada variável explicativa <em>explica</em> a variação na <strong>variável dependente</strong>. O <span class="math inline">\(R^2_{ajustado}\)</span> nos diz o percentual de <em>variação explicada somente pelas</em> <strong>variáveis independentes</strong> que realmente afetam a <em>variável dependente</em>.</p>
+</section>
+<section id="problemas-com-o-r2-que-são-corrigidos-pelo-r2_ajustado" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="problemas-com-o-r2-que-são-corrigidos-pelo-r2_ajustado">Problemas com o <span class="math inline">\(R^2\)</span> que são corrigidos pelo <span class="math inline">\(R^2_{ajustado}\)</span></h3>
+<ol type="1">
+<li>O <span class="math inline">\(R^2\)</span> aumenta com cada preditora adicionada a um modelo. Como o <span class="math inline">\(R^2\)</span> sempre aumenta e nunca diminui, pode parecer que se tem um modelo melhor conforme se aumenta o número de termos adicionados ao modelo. Isto pode ser completamente equivocado.</li>
+<li>De modo similar, se o modelo tem muitos termos e muitos polinômios de alta ordem, pode-se cair no problema de <em>over-fitting</em> dos dados. Quando se tem o <em>over-fitting</em> de dados, um valor muito alto de <span class="math inline">\(R^2\)</span> pode levar a projeções equivocadas.</li>
+</ol>
+<!-- adicionando abordagem do um curso da Yale (ANOVA for Regression) que tem uma boa descrição da ANOVA para análise de regressão:
+http://www.stat.yale.edu/Courses/1997-98/101/anovareg.htm -->
+</section>
+</section>
+<section id="análise-de-variância-para-regressão-linear" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="análise-de-variância-para-regressão-linear">Análise de Variância para Regressão Linear</h2>
+<p>Para avaliar a significância do modelo, realizamos uma <strong>Análise de Variância</strong> (ANOVA) para a regressão. Esta análise visa avaliar se o modelo obtido (<span class="math inline">\(\beta_0 \mbox{ e } \beta_1\)</span>) é estatisticamente diferente do <em>modelo nulo</em>, ou seja, o modelo onde o coeficiente <span class="math inline">\(\beta_1\)</span>, que dá a inclinação da reta, seja nulo.</p>
+<p>Como vimos na estimação dos parâmetros, o objetivo é encontrar parâmetros que façam com que a soma de quadrados dos resíduos seja mínima.</p>
+<p>O conceito básico da regressão é <code>DADOS = AJUSTE + RESÍDUOS</code>, que podemos escrever como: <span class="math display">\[ (y_i - \bar{y}) = (\hat{y_i} - \bar{y}) + (y_i - \hat{y_i})\]</span> O primeiro termo é a variação total na variável resposta <span class="math inline">\(y\)</span>, o segundo termo é a variação na resposta média e o terceiro termo é o valor residual.</p>
+<p>Se um modelo é bem ajustado, esperamos que a soma de quadrados do modelo seja grande e que a soma de quadrados dos resíduos seja mínima.</p>
+<!-- ## Análise de Variância para Regressão Linear -->
+<p>Elevando ao quadrado e adicionando os termos para as <span class="math inline">\(n\)</span> observações temos:</p>
+<p><span class="math display">\[\sum(y_i - \bar{y})^2 = \sum(\hat{y_i} - \bar{y})^2 + \sum(y_i - \hat{y_i})^2\]</span></p>
+<p>Podemos particionar a soma de quadrados da seguinte forma:</p>
+<p><span class="math display">\[SST = SSM + RSS \]</span></p>
+<p><strong>SS</strong> é <em>soma dos quadrados</em> e <strong>T</strong>, <strong>M</strong> e <strong>R</strong> são: <strong>total, modelo e resíduos</strong>, respectivamente.</p>
+<p>A variância da amostra <span class="math inline">\(s_y^2\)</span> é <span class="math inline">\(\sum(y_i - \bar{y})^2/(n-1) = SST/DFT\)</span>, ou seja, a <em>soma total dos quadrados</em> dividida pelo <em>total de graus de liberdade</em> (DFT).</p>
+<p>Para regressão linear simples, a MSM (<em>média quadrada do modelo</em>) é <span class="math inline">\(\sum(\hat{y_i} - \bar{y})^2/(1) = SSM/DFM\)</span>, já que um modelo de regressão linear simples tem apenas uma variável explicativa <span class="math inline">\(x\)</span>.</p>
+<p>O <em>Erro quadrado médio</em> (MSE) é dado por <span class="math inline">\(\sum(y_i - \hat{y_i})^2/(n-2) = RSS/DFE\)</span>, que é a estimativa da variância sobre a linha de regressão da população (<span class="math inline">\(\sigma^2\)</span>).</p>
+<p>Normalmente, os cálculos da ANOVA são mostrados em uma <em>tabela de análise de variância</em> que tem o formato apresentado no Quadro <a href="#tbl-fmtanova">Tabela&nbsp;1</a> para regressão linear <strong>simples</strong>:</p>
+<div id="tbl-fmtanova" class="anchored">
+<table class="table">
+<caption>Tabela&nbsp;1: Formato do Resultado da Análise de Variância</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 29%">
+<col style="width: 28%">
+<col style="width: 22%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonte</th>
+<th>Graus de Liberdade</th>
+<th>Soma dos Quadrados</th>
+<th>Quadrado Médio</th>
+<th>F</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modelo</td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(\sum(\hat{y_i}-\bar{y})^2\)</span></td>
+<td><code>SSM/DFM</code></td>
+<td><code>MSM/MSE</code></td>
+</tr>
+<tr class="even">
+<td>Resíduo</td>
+<td><span class="math inline">\(n-2\)</span></td>
+<td><span class="math inline">\(\sum(y_i - \hat{y_i})^2\)</span></td>
+<td><code>RSS/DFE</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Total</td>
+<td><span class="math inline">\(n-1\)</span></td>
+<td><span class="math inline">\(\sum(y_i - \bar{y})^2\)</span></td>
+<td><code>SST/DFT</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- \begin{center} -->
+<!-- \begin{minipage}{\textwidth} -->
+<!-- \captionof{quadro}{Formato do resultado da Análise de Variância}\label{qdr:fmtanova} -->
+<!-- \vspace{-0.7\baselineskip} -->
+<!-- \begin{quadrado} -->
+<!-- \vspace{-1.1\baselineskip} -->
+<!-- \begin{center} -->
+<!-- \begin{tabularx}{\textwidth}{rXXXc} -->
+<!-- Fonte   &  Graus de Liberdade & Soma dos Quadrados & Quadrado Médio &   F \tabularnewline -->
+<!-- \midrule -->
+<!-- Modelo  & $1$  & $\sum(\hat{y_i}-\bar{y})^2$ & \verb`SSM/DFM` &  \verb`MSM/MSE` \tabularnewline -->
+<!-- Resíduo & $n-2$ & $\sum(y_i - \hat{y_i})^2$ & \verb`RSS/DFE` & \tabularnewline -->
+<!-- \midrule -->
+<!-- Total   &  $n-1$ & $\sum(y_i - \bar{y})^2$ & \verb`SST/DFT` & \tabularnewline -->
+<!-- \end{tabularx} -->
+<!-- \end{center} -->
+<!-- \end{quadrado} -->
+<!-- \vspace{-.3\baselineskip} -->
+<!-- \footnotesize Fonte: Elaborado pelo próprio autor -->
+<!-- \end{minipage} -->
+<!-- \end{center} -->
+<p>A coluna “F” provê uma estatística para testar a hipótese de que <span class="math inline">\(\beta_1 \neq 0\)</span> contra a hipótese nula de que <span class="math inline">\(\beta_1 = 0\)</span>. Em outras palavras, estamos testando o modelo <strong>nulo</strong> (que só considera o <em>intercept</em>) contra o modelo <strong>alternativo</strong> com a variável explicativa. São modelos aninhados: o modelo <strong>nulo</strong> está contido no modelo <strong>alternativo</strong>.</p>
+<p>A estatística de teste é a razão <code>MSM/MSE</code>. Quando o termo <code>MSM</code> é grande relativamente ao termo <code>MSE</code>, então a razão é grande e há evidência contra a hipótese nula. Para regressão linear simples, a estatística <code>MSM/MSE</code> tem uma distribuição <span class="math inline">\(F\)</span> com os graus de liberdade dados por (<code>DFM</code>, <code>DFE</code>) = <span class="math inline">\((1, n-2)\)</span>.</p>
+<ul>
+<li>O teste estatístico é comparar o valor da distribuição <span class="math inline">\(F\)</span> para estes graus de liberdade com o valor obtido acima.
+<ul>
+<li>No R isso é feito com a função <code>qf</code> que dá os quantis da distribuição <span class="math inline">\(F\)</span></li>
+</ul></li>
+</ul>
+<p>O teste <strong>F</strong> pode ser expresso genericamente como (<span class="citation" data-cites="peck-IntroStat">Peck, Olsen, e Devore (<a href="#ref-peck-IntroStat" role="doc-biblioref">2012</a>)</span>): <span class="math display">\[F = \frac{\left(\frac{RSS_1 - RSS_2}{p_2 - p_1}\right)}{\left(\frac{RSS_2}{n-p_2}\right)}\]</span> onde <span class="math inline">\(RSS_i\)</span> é a <em>soma dos quadrados dos resíduos</em> do modelo <span class="math inline">\(i\)</span>.</p>
+<!-- https://en.wikipedia.org/wiki/F-test -->
+<p>Considerando dois modelos, 1 e 2, onde o modelo 1 é <em>aninhado</em> dentro do modelo 2, o modelo 1 tem <span class="math inline">\(p_1\)</span> parâmetros e o modelo 2 tem <span class="math inline">\(p_2\)</span> parâmetros, sendo <span class="math inline">\(p_1 &lt; p_2\)</span>. A hipótese é que o modelo 2, que tem mais parâmetros, explique melhor a variância dos dados. E esta explicação deve ser significativamente relevante. Então o teste <strong>F</strong> vai fazer esta avaliação; no <strong>R</strong>, a função <code>qf</code> vai ser utilizada para obtermos o valor da estatística <strong>F</strong> da seguinte forma:</p>
+<p><code>qf(prob, df1, df2, ...)</code> &nbsp; onde:</p>
+<ul>
+<li><span class="math inline">\(prob\)</span> é o nível de confiança (probabilidade para a qual queremos o quantil);</li>
+<li><span class="math inline">\(df1 = p_2 - p_1\)</span></li>
+<li><span class="math inline">\(df2 = n - p_2\)</span></li>
+</ul>
+<p>O modelo <strong>nulo</strong> tem um parâmetro apenas – o <em>intercept</em>; logo <span class="math inline">\(p_1 = 1\)</span>; o modelo <strong>alternativo</strong> tem dois parâmetros (o <em>intercept</em> e a variável explicativa); logo <span class="math inline">\(p_2 = 2\)</span>.</p>
+<p>Outra possibilidade é verificar a probabilidade de se obter um valor de <span class="math inline">\(F\)</span> tão grande como o dado pela razão <code>MSM/MSE</code> com estes graus de liberdade. Neste caso utilizamos a função de distribuição de probabilidade acumulada ao invés dos quantis.</p>
+<ul>
+<li>Como queremos a área de rejeição da hipótese, usamos <code>1 - pf</code></li>
+</ul>
+<p>No próximo capítulo veremos exemplos de Análise de Regressão e teremos a oportunidade de utilizar estes conceitos no exercício tutoriado.</p>
+<!-- Olhar o livro The R book - 2nd edition, o capitulo sobre regressao; parece bem interessante e completo; o capitulo sobre testes tb é muito bom. -->
+</section>
+<section id="análise-de-regressão-exemplo-2" class="level2">
+<h2 class="anchored" data-anchor-id="análise-de-regressão-exemplo-2">Análise de Regressão – Exemplo 2</h2>
+<ul>
+<li>Podemos ilustrar o efeito da <em>regressão</em> utilizando dados de exames de alunos que fizeram um determinado curso de estatística.
+<ul>
+<li>Os dados estão no Moodle: <code>stat500.csv</code></li>
+</ul></li>
+<li>Após lermos os dados, fazemos um procedimento chamado <em>padronização</em>, que é deixar os dados com média “zero” e desvio padrão “um”.
+<ul>
+<li>Para isso, utilizamos a função <code>scale</code> do R.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat500uns <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../datasets/stat500.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>stat500 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">scale</span>(stat500uns))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stat500)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">'data.frame'</span><span class="sc">:</span>   <span class="dv">55</span> obs. of  <span class="dv">4</span> variables<span class="sc">:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a> <span class="er">$</span> midterm<span class="sc">:</span> num  <span class="fl">0.872</span> <span class="fl">0.455</span> <span class="fl">0.664</span> <span class="fl">0.664</span> <span class="fl">0.455</span> ...</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a> <span class="sc">$</span> final  <span class="sc">:</span> num  <span class="sc">-</span><span class="fl">0.09909</span> <span class="sc">-</span><span class="fl">0.40188</span> <span class="fl">0.00184</span> <span class="fl">1.61671</span> <span class="fl">0.80927</span> ...</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a> <span class="sc">$</span> hw     <span class="sc">:</span> num  <span class="fl">0.564</span> <span class="fl">0.489</span> <span class="fl">0.514</span> <span class="fl">0.739</span> <span class="fl">0.264</span> ...</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> <span class="sc">$</span> total  <span class="sc">:</span> num  <span class="fl">0.585</span> <span class="fl">0.211</span> <span class="fl">0.516</span> <span class="fl">1.392</span> <span class="fl">0.713</span> ...</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(stat500, mean)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      midterm         final            hw         total </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a> <span class="fl">3.571549e-16</span> <span class="sc">-</span><span class="fl">2.157444e-16</span>  <span class="fl">3.073368e-16</span>  <span class="fl">5.344994e-16</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(stat500, sd)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>midterm   final      hw   total </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Vamos plotar as notas no exame final versus as notas do exame <em>midterm</em>
+<ul>
+<li>Também colocamos uma linha do tipo <span class="math inline">\(y = x\)</span></li>
+</ul></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(final <span class="sc">~</span> midterm, stat500)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="regressaolinear_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ul>
+<li>Vamos calcular o ajuste da regressão por mínimos quadrados e plotar a linha de regressão. Também vamos calcular as correlações.</li>
+</ul>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">lm</span>(final <span class="sc">~</span> midterm, stat500)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(stat500)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>          midterm      final         hw     total</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>midterm <span class="fl">1.0000000</span> <span class="fl">0.54522775</span> <span class="fl">0.27205756</span> <span class="fl">0.8444568</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>final   <span class="fl">0.5452277</span> <span class="fl">1.00000000</span> <span class="fl">0.08733764</span> <span class="fl">0.7788629</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>hw      <span class="fl">0.2720576</span> <span class="fl">0.08733764</span> <span class="fl">1.00000000</span> <span class="fl">0.5644286</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>total   <span class="fl">0.8444568</span> <span class="fl">0.77886293</span> <span class="fl">0.56442864</span> <span class="fl">1.0000000</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(final <span class="sc">~</span> midterm, stat500)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(g<span class="sc">$</span>coef, <span class="at">lty =</span> <span class="dv">5</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="regressaolinear_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Vemos que para os alunos que tiraram 1 SD acima da média no <em>midterm</em>, prevemos que terão uma nota um pouco abaixo que isto na média no exame final (veja a linha tracejada da regressão)
+<ul>
+<li><span class="math inline">\(0.54523\)</span> SD acima da média para ser exato.</li>
+</ul></li>
+<li>Do mesmo modo, um estudante que tirou menos do que a média no <em>midterm</em>, é esperado que vá relativamente melhor no exame final, apesar que ainda abaixo da média.</li>
+<li><strong>Esta é a regressão à mediocridade</strong> que Galton estudou e descreveu, com relação à altura de pais e filhos.
+<ul>
+<li>Pais altos tendem a ter filhos altos, mas não tão altos quanto seus pais.</li>
+<li>Pais baixos tendem a ter filhos baixos, mas não tão baixos quanto seus pais.</li>
+</ul></li>
+<li>Verificando o ajuste</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(g)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>Call<span class="sc">:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="at">formula =</span> final <span class="sc">~</span> midterm, <span class="at">data =</span> stat500)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>Residuals<span class="sc">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    Min      1Q  Median      3Q     Max </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fl">2.0049</span> <span class="sc">-</span><span class="fl">0.5363</span>  <span class="fl">0.1064</span>  <span class="fl">0.6024</span>  <span class="fl">1.8745</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>Coefficients<span class="sc">:</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>              Estimate Std. Error t value <span class="fu">Pr</span>(<span class="sc">&gt;</span><span class="er">|</span>t<span class="sc">|</span>)    </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>(Intercept) <span class="sc">-</span><span class="fl">3.999e-16</span>  <span class="fl">1.141e-01</span>   <span class="fl">0.000</span>        <span class="dv">1</span>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>midterm      <span class="fl">5.452e-01</span>  <span class="fl">1.151e-01</span>   <span class="fl">4.735</span> <span class="fl">1.67e-05</span> <span class="sc">**</span><span class="er">*</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="sc">---</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>Signif. codes<span class="sc">:</span>  <span class="dv">0</span> <span class="st">'***'</span> <span class="fl">0.001</span> <span class="st">'**'</span> <span class="fl">0.01</span> <span class="st">'*'</span> <span class="fl">0.05</span> <span class="st">'.'</span> <span class="fl">0.1</span> <span class="st">' '</span> <span class="dv">1</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>Residual standard error<span class="sc">:</span> <span class="fl">0.8462</span> on <span class="dv">53</span> degrees of freedom</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>Multiple R<span class="sc">-</span>squared<span class="sc">:</span>  <span class="fl">0.2973</span>,    Adjusted R<span class="sc">-</span>squared<span class="sc">:</span>  <span class="fl">0.284</span> </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>F<span class="sc">-</span>statistic<span class="sc">:</span> <span class="fl">22.42</span> on <span class="dv">1</span> and <span class="dv">53</span> DF,  p<span class="sc">-</span>value<span class="sc">:</span> <span class="fl">1.675e-05</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Verificando o ajuste – ANOVA</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(g)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>Analysis of Variance Table</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Response<span class="sc">:</span> final</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          Df Sum Sq Mean Sq F value    <span class="fu">Pr</span>(<span class="sc">&gt;</span>F)    </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>midterm    <span class="dv">1</span> <span class="fl">16.053</span>  <span class="fl">16.053</span>  <span class="fl">22.421</span> <span class="fl">1.675e-05</span> <span class="sc">**</span><span class="er">*</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Residuals <span class="dv">53</span> <span class="fl">37.947</span>   <span class="fl">0.716</span>                      </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="sc">---</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>Signif. codes<span class="sc">:</span>  <span class="dv">0</span> <span class="st">'***'</span> <span class="fl">0.001</span> <span class="st">'**'</span> <span class="fl">0.01</span> <span class="st">'*'</span> <span class="fl">0.05</span> <span class="st">'.'</span> <span class="fl">0.1</span> <span class="st">' '</span> <span class="dv">1</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="diagnósticos-da-regressão" class="level2">
+<h2 class="anchored" data-anchor-id="diagnósticos-da-regressão">Diagnósticos da Regressão</h2>
+<ul>
+<li>Temos utilizado até aqui a função <code>summary()</code> para termos os parâmetros do modelo e um sumário das estatísticas.</li>
+<li>Infelizmente, <strong>nada</strong> na saída da função <code>summary(model)</code> nos diz se o nosso modelo é apropriado.
+<ul>
+<li>Ou seja, que satisfizemos as hipóteses estatísticas subjacentes ao nosso modelo.</li>
+<li>Nossa confiança nas inferências sobre os parâmetros da regressão dependem do grau em que conseguimos atender as hipóteses estatísticas do modelo de <strong>minimos quadrados ordinários</strong> – <strong>OLS</strong>.</li>
+</ul></li>
+<li>Por que isso é importante?
+<ul>
+<li>Irregularidades nos dados ou uma especificação errada dos relacionamentos entre as variáveis preditoras e a variável resposta pode nos levar a especificar um modelo amplamente impreciso.</li>
+<li>Também podemos concluir que uma variável preditora e a variável resposta não estão relacionadas, quando na verdade, estão.
+<ul>
+<li>Ou o contrário!</li>
+</ul></li>
+</ul></li>
+<li>O R tem muitos métodos para se avaliar as hipóteses estatísticas em uma análise de regressão.</li>
+<li>A abordagem mais comum é aplicar a função <code>plot()</code> ao objeto retornado pela função <code>lm()</code>.</li>
+<li>Fazendo isso, teremos quatro gráficos que são úteis para se avaliar o ajuste de modelo.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="regressaolinear_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="gráficos-diagnósticos-da-regressão" class="level2">
+<h2 class="anchored" data-anchor-id="gráficos-diagnósticos-da-regressão">Gráficos Diagnósticos da Regressão</h2>
+<section id="topo-esquerda" class="level3">
+<h3 class="anchored" data-anchor-id="topo-esquerda">Topo-esquerda</h3>
+<p>Mostra os resíduos no eixo y contra os valores ajustados no eixo x. Não se deve observar estruturas ou padrões no gráfico. Os pontos devem se parecer como o céu à noite. É um problema se os pontos se espalham conforme os valores ajustados ficam maiores – como se fosse uma fatia de queijo. A amplitude de variação dos resíduos deve ser independente dos valores ajustados.</p>
+</section>
+<section id="topo-direita" class="level3">
+<h3 class="anchored" data-anchor-id="topo-direita">Topo-direita</h3>
+<p>Gráfico <strong>qqnorm</strong> (normal) que deve ser uma linha reta se os erros são normalmente distribuídos. Se o gráfico tivesse a forma de um <strong>S</strong> ou de uma <strong>banana</strong> precisariamos ajustar um modelo diferente.</p>
+</section>
+</section>
+<section id="usando-o-pacote-lmtest-para-avaliar-o-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="usando-o-pacote-lmtest-para-avaliar-o-modelo">Usando o pacote <code>lmtest</code> para avaliar o modelo</h2>
+<p>Vamos utilizar a função <code>bptest</code> que executa o teste de Breusch-Pagan, que ajusta um modelo linear de regressão aos resíduos de um modelo de regressão linear (por <em>default</em> as mesmas variáveis explicativas são utilizadas como no modelo principal de regressão) e rejeita se muito da variância é explicada pelas variáveis explanatórias adicionais.</p>
+<p>A hipótese nula do teste é que o modelo tem variância constante, ou seja, é um teste de homocedasticidade do nosso modelo.</p>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(g)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    studentized Breusch<span class="sc">-</span>Pagan test</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">:</span>  g</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>BP <span class="ot">=</span> <span class="fl">0.86813</span>, df <span class="ot">=</span> <span class="dv">1</span>, p<span class="sc">-</span>value <span class="ot">=</span> <span class="fl">0.3515</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Como o <code>p-value</code> do teste é maior do que 0.05, aceitamos a hipótese nula de que a variância é constante.</p>
+</section>
+</section>
+<section id="exercícios" class="level1">
+<h1>Exercícios</h1>
+<section id="exercício-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercício-1">Exercício 1</h2>
+<p>Vamos utilizar o conjunto de dados que mostra o crescimento de lagartas (“caterpillars”)” alimentadas com uma dieta experimental que difere no conteúdo de <em>tannin</em>.</p>
+<!--
+  + Os dados estão no Moodle: `regression.txt`
+-->
+<p>Nosso objetivo é construir um modelo para explicar o crescimento das lagartas a partir da dieta.</p>
+<p>As etapas apresentadas neste Exemplo são as etapas típicas de uma análise de regressão.</p>
+<section id="leitura-dos-dados" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="leitura-dos-dados">Leitura dos Dados</h4>
+<div class="cell">
+<div class="cell-output-display">
+
+<div id="mrsjijwgnc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mrsjijwgnc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mrsjijwgnc thead, #mrsjijwgnc tbody, #mrsjijwgnc tfoot, #mrsjijwgnc tr, #mrsjijwgnc td, #mrsjijwgnc th {
+  border-style: none;
+}
+
+#mrsjijwgnc p {
+  margin: 0;
+  padding: 0;
+}
+
+#mrsjijwgnc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mrsjijwgnc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mrsjijwgnc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mrsjijwgnc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mrsjijwgnc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mrsjijwgnc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mrsjijwgnc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mrsjijwgnc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mrsjijwgnc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mrsjijwgnc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mrsjijwgnc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mrsjijwgnc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mrsjijwgnc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mrsjijwgnc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mrsjijwgnc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mrsjijwgnc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mrsjijwgnc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mrsjijwgnc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mrsjijwgnc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mrsjijwgnc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mrsjijwgnc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mrsjijwgnc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mrsjijwgnc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mrsjijwgnc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mrsjijwgnc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mrsjijwgnc .gt_left {
+  text-align: left;
+}
+
+#mrsjijwgnc .gt_center {
+  text-align: center;
+}
+
+#mrsjijwgnc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mrsjijwgnc .gt_font_normal {
+  font-weight: normal;
+}
+
+#mrsjijwgnc .gt_font_bold {
+  font-weight: bold;
+}
+
+#mrsjijwgnc .gt_font_italic {
+  font-style: italic;
+}
+
+#mrsjijwgnc .gt_super {
+  font-size: 65%;
+}
+
+#mrsjijwgnc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mrsjijwgnc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mrsjijwgnc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mrsjijwgnc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mrsjijwgnc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mrsjijwgnc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mrsjijwgnc .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="growth">growth</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="tannin">tannin</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="growth" class="gt_row gt_right">12</td>
+<td headers="tannin" class="gt_row gt_right">0</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">10</td>
+<td headers="tannin" class="gt_row gt_right">1</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">8</td>
+<td headers="tannin" class="gt_row gt_right">2</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">11</td>
+<td headers="tannin" class="gt_row gt_right">3</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">6</td>
+<td headers="tannin" class="gt_row gt_right">4</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">7</td>
+<td headers="tannin" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">2</td>
+<td headers="tannin" class="gt_row gt_right">6</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">3</td>
+<td headers="tannin" class="gt_row gt_right">7</td></tr>
+    <tr><td headers="growth" class="gt_row gt_right">3</td>
+<td headers="tannin" class="gt_row gt_right">8</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="examinando-os-dados-gráfico-de-dispersão" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="examinando-os-dados-gráfico-de-dispersão">Examinando os dados – gráfico de dispersão</h4>
+<p>A figura abaixo apresenta um gráfico de dispersão das variáveis <strong>tannin</strong> e <strong>growth</strong>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="regressaolinear_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Olhando o gráfico podemos fazer uma estimativa grosseira dos parâmetros <em>no olho</em>.</p>
+<ul>
+<li>Quais as suas estimativas?</li>
+</ul>
+<p>O conteúdo de <em>tannin</em> (eixo <span class="math inline">\(x\)</span>) aumentou por 8 unidades, em resposta ao que o crescimento <em>growth</em> (<span class="math inline">\(y\)</span>) declinou de cerca de 12 unidades para 2 unidades.</p>
+<p>Uma mudança de <span class="math inline">\(-10\)</span> unidades no crescimento!</p>
+<p>A inclinação <span class="math inline">\(b_1\)</span> é a mudança em <span class="math inline">\(y\)</span> dividida pela mudança em <span class="math inline">\(x\)</span>, assim: <span class="math display">\[ b_1 \approx \frac{-10}{8} = -1.25\]</span> Agora, conclua o exercício:</p>
+<ol start="2" type="a">
+<li>Determine o modelo de regressão linear simples entre as variáveis <em>tannin</em> e <em>growth</em>.</li>
+<li>Calcule e interprete os coeficientes de correlação (<span class="math inline">\(r\)</span>) e determinação (<span class="math inline">\(r^2\)</span>).</li>
+</ol>
+</section>
+</section>
+<section id="exercício-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercício-2">Exercício 2</h2>
+<p>Um artigo publicado na revista <a href="http://amstat.tandfonline.com/loi/tech">Technometrics</a>, de SC Narula, e JF Wellington (<em>Prediction, linear regression, and a minimum sum of relative errors</em>), apresenta dados de preços de vendas e taxas anuais para 24 casas.</p>
+<section id="dados" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="dados">Dados</h4>
+<p>Os dados do artigo mencionado estão disponíveis no arquivo: <strong>montgomery_11-4.txt</strong></p>
+<p>Com isso:</p>
+<ul>
+<li>Faça a importação dos dados, verifique sua estrutura e faça um sumário estatístico.
+<ul>
+<li>Importação</li>
+<li>Estrutura</li>
+<li>Sumário</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+
+<div id="zkbxjfxogn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zkbxjfxogn table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zkbxjfxogn thead, #zkbxjfxogn tbody, #zkbxjfxogn tfoot, #zkbxjfxogn tr, #zkbxjfxogn td, #zkbxjfxogn th {
+  border-style: none;
+}
+
+#zkbxjfxogn p {
+  margin: 0;
+  padding: 0;
+}
+
+#zkbxjfxogn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zkbxjfxogn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zkbxjfxogn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zkbxjfxogn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zkbxjfxogn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zkbxjfxogn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zkbxjfxogn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zkbxjfxogn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zkbxjfxogn .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zkbxjfxogn .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zkbxjfxogn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zkbxjfxogn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zkbxjfxogn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zkbxjfxogn .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zkbxjfxogn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zkbxjfxogn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zkbxjfxogn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zkbxjfxogn .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zkbxjfxogn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zkbxjfxogn .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zkbxjfxogn .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zkbxjfxogn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zkbxjfxogn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zkbxjfxogn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zkbxjfxogn .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zkbxjfxogn .gt_left {
+  text-align: left;
+}
+
+#zkbxjfxogn .gt_center {
+  text-align: center;
+}
+
+#zkbxjfxogn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zkbxjfxogn .gt_font_normal {
+  font-weight: normal;
+}
+
+#zkbxjfxogn .gt_font_bold {
+  font-weight: bold;
+}
+
+#zkbxjfxogn .gt_font_italic {
+  font-style: italic;
+}
+
+#zkbxjfxogn .gt_super {
+  font-size: 65%;
+}
+
+#zkbxjfxogn .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zkbxjfxogn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zkbxjfxogn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zkbxjfxogn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zkbxjfxogn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zkbxjfxogn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zkbxjfxogn .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Venda">Venda</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Taxas">Taxas</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Venda" class="gt_row gt_right">25.9</td>
+<td headers="Taxas" class="gt_row gt_right">4.9176</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">29.5</td>
+<td headers="Taxas" class="gt_row gt_right">5.0208</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">27.9</td>
+<td headers="Taxas" class="gt_row gt_right">4.5429</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">25.9</td>
+<td headers="Taxas" class="gt_row gt_right">4.5573</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">29.9</td>
+<td headers="Taxas" class="gt_row gt_right">5.0597</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">29.9</td>
+<td headers="Taxas" class="gt_row gt_right">3.8910</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">30.9</td>
+<td headers="Taxas" class="gt_row gt_right">5.8980</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">28.9</td>
+<td headers="Taxas" class="gt_row gt_right">5.6039</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">35.9</td>
+<td headers="Taxas" class="gt_row gt_right">5.8282</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">31.5</td>
+<td headers="Taxas" class="gt_row gt_right">5.3003</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">31.0</td>
+<td headers="Taxas" class="gt_row gt_right">6.2712</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">30.9</td>
+<td headers="Taxas" class="gt_row gt_right">5.9592</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">30.0</td>
+<td headers="Taxas" class="gt_row gt_right">5.0500</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">36.9</td>
+<td headers="Taxas" class="gt_row gt_right">8.2464</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">41.9</td>
+<td headers="Taxas" class="gt_row gt_right">6.6969</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">40.5</td>
+<td headers="Taxas" class="gt_row gt_right">7.7841</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">43.9</td>
+<td headers="Taxas" class="gt_row gt_right">9.0384</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">37.5</td>
+<td headers="Taxas" class="gt_row gt_right">5.9894</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">37.9</td>
+<td headers="Taxas" class="gt_row gt_right">7.5422</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">44.5</td>
+<td headers="Taxas" class="gt_row gt_right">8.7951</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">37.9</td>
+<td headers="Taxas" class="gt_row gt_right">6.0831</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">38.9</td>
+<td headers="Taxas" class="gt_row gt_right">8.3607</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">36.9</td>
+<td headers="Taxas" class="gt_row gt_right">8.1400</td></tr>
+    <tr><td headers="Venda" class="gt_row gt_right">45.8</td>
+<td headers="Taxas" class="gt_row gt_right">9.1416</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<ol type="a">
+<li>Faça um gráfico apropriado para relacionar o preço de vendas às taxas pagas (o preço de venda varia conforme as taxas, ou seja, o preço é a <strong>variável dependente</strong>).</li>
+<li>Calcule o modelo de regressão linear, determinando os coeficientes e <span class="math inline">\(r^2\)</span> padrão e o ajustado.</li>
+</ol>
+</section>
+</section>
+<section id="exercício-3" class="level2">
+<h2 class="anchored" data-anchor-id="exercício-3">Exercício 3</h2>
+<p>Para uma amostra de oito operadores de máquina, foram coletados o número de horas de treinamento (<span class="math inline">\(x\)</span>) e o tempo necessário para completar o trabalho (<span class="math inline">\(y\)</span>). Os dados coletados encontram-se na tabela abaixo:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>x</th>
+<th>5,2</th>
+<th>5,1</th>
+<th>4,9</th>
+<th>4,6</th>
+<th>4,7</th>
+<th>4,8</th>
+<th>4,6</th>
+<th>4,9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>y</td>
+<td>13</td>
+<td>15</td>
+<td>18</td>
+<td>20</td>
+<td>19</td>
+<td>17</td>
+<td>21</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<p>Pede-se:</p>
+<ol type="a">
+<li>Faça o gráfico de dispersão para esses dados.</li>
+<li>Determine o modelo de regressão linear simples entre as variáveis <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>.</li>
+<li>Calcule e interprete os coeficientes de correlação (<span class="math inline">\(r\)</span>) e determinação (<span class="math inline">\(r^2\)</span>).</li>
+</ol>
+<section id="referências" class="level3">
+<h3 class="anchored" data-anchor-id="referências">Referências</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-farawayLMR2014" class="csl-entry" role="listitem">
+Faraway, Julian James. 2014. <em>Linear Models with R.</em> 2nd ed. Boca Raton, FL: Chapman; Hall/CRC Press. <a href="https://www.routledge.com/Linear-Models-with-R/Faraway/p/book/9781439887332">https://www.routledge.com/Linear-Models-with-R/Faraway/p/book/9781439887332</a>.
+</div>
+<div id="ref-galton" class="csl-entry" role="listitem">
+Galton, Francis. 1886. <span>«Regression Towards Mediocrity in Hereditary Stature.»</span> <em>The Journal of the Anthropological Institute of Great Britain and Ireland</em> 15: 246–63. <a href="http://www.jstor.org/stable/2841583">http://www.jstor.org/stable/2841583</a>.
+</div>
+<div id="ref-peck-IntroStat" class="csl-entry" role="listitem">
+Peck, Roxy, Chris Olsen, e Jay L. Devore. 2012. <em>Introduction to Statistics and Data Analysis</em>. 4th ed. Boston, MA – USA: Brooks/Cole, CENGAGE Learning.
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiada");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiada");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

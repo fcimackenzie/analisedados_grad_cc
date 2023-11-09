@@ -7,7 +7,7 @@
 exerciciosteoria/*_cache/**
 exerciciosteoria/*_files/**
 docs/*_files/**
-docs/slides/*_files/**
+docs/textos/*_files/**
 LocalOnly/**
 /.quarto/
 /_site/

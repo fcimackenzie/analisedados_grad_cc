@@ -1,0 +1,203 @@
+---
+title: "Análise de Modelos de Regressão Linear"
+author: "Mário Olímpio de Menezes"
+date: "26/04/2020"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "" 
+    echo: false
+    warning: false
+    message: false
+    R.options:
+      knitr.graphics.auto_pdf: true
+---
+
+
+
+```{r}
+#| label: tr05-prob1a1
+library(readr)
+# separador é ponto-e-vírgula, vamos usar `read_csv2`; também precisamos indicar que o separador decimal é a vírgula ",".
+autos <- read_csv2("../datasets/autos.csv", locale = locale(decimal_mark = ","))
+```
+
+> como as variáveis que utilizaremos não precisam de ajustes, vamos direto ao modelo
+
+```{r}
+#| label: tr05-prob1a2
+modtr05p1 <- lm(price ~ horsepower + length + engine.size + city.mpg , data = autos)
+summary(modtr05p1)
+```
+
+A variável `city.mpg` não tem significância estatística no nosso modelo, então vamos removê-la e atualizar o modelo.
+
+```{r}
+modtr05p1a <- update(modtr05p1, . ~ . - city.mpg)
+summary(modtr05p1a)
+```
+
+
+Agora todas as variáveis tem significância estatística, e nosso modelo consegue explicar aproximadamente 81.3% da variabilidade da variável alvo, `price`.
+
+Próxima etapa, os gráficos diagnósticos.
+
+```{r}
+#| label: fig-grafdiag
+#| fig-cap: Gráficos Diagnósticos
+par(mfrow=c(2,2))
+plot(modtr05p1a)
+```
+
+Os gráficos diagnósticos não estão tão fáceis de interpretar; então podemos utilizar pacotes do **R** específicos para isso. Um destes pacotes é o `lmtest`.
+
+```{r}
+library(lmtest)
+```
+
+## Usando o pacote `lmtest` para avaliar o modelo
+
+Vamos utilizar a função `bptest` que executa o teste de Breusch-Pagan, que ajusta um modelo linear de regressão aos resíduos de um modelo de regressão linear (por _default_ as mesmas variáveis explicativas são utilizadas como no modelo principal de regressão) e rejeita se muito da variância é explicada pelas variáveis explanatórias adicionais.
+
+A hipótese nula do teste é que o modelo tem variância constante, ou seja, é um teste de homocedasticidade do nosso modelo. 
+
+```{r}
+bptest(modtr05p1a)
+```
+
+
+Por este teste, temos que rejeitar a hipótese nula de que o modelo tem variância constante.
+
+## Usando o pacote `olsrr`
+
+O pacote `olsrr` oferece algumas ferramentas para detectar violações das hipóteses padrão da regressão. Vamos examinar apenas algumas funcionalidades, neste caso, o diagnóstico dos resíduos. As hipóteses padrão da regressão incluem as seguintes premissas sobre os resíduos/erros:
+
+* O erro tem uma distribuição normal (hipótese de normalidade)
+* O erro tem média zero.
+* Os erros tem variância constante (mas desconhecida) -- hipótese de homocedasticidade.
+* Os erros são independentes uns dos outros (hipótese de erros independentes).
+
+### Testes para detectar a violação da hipótese de normalidade
+
+```{r}
+library(olsrr)
+```
+
+```{r}
+ols_test_normality(modtr05p1a)
+```
+
+Pelos resultados dos testes acima, todos os `p-value`s estão na região de rejeição da hipótese nula, ou seja, os resíduos não seguem uma distribuição normal.
+
+## Usando o pacote `gvlma`
+
+
+O pacote `gvlma` é uma implementação do artigo de Pena \& Slate called "Global Validation of Linear Model Assumptions"  e nos permite verificar rapidamente por:
+
+* Linearidade -- o teste **Global Stat** testa a hipótese nula de que nosso modelo é uma combinação linear das preditoras.
+* Heterocedasticidade -- o teste correspondente testa a hipótese nula de que a variância dos nossos resíduos é relativamente constante.
+* Normalidade -- testa distorções na distribuição dos resíduos ( _skewness_ e _curtose_ ), para entendermos se os resíduos do modelo seguem uma distribuição normal. Se a hipótese nula é rejeitada, provavelmente é necessária uma transformação nos dados (p.explo, uma transformação **log**). Podemos observar isso visualmente no *QQ-Plot*.
+* *Link Function*  -- testa se nossa variável dependente é realmente contínua, ou categórica. Se a hipótese nula é rejeitada (`p-value` < 0.05), é uma indicação de que deveríamos utilizar uma forma alternativa do modelo linear generalizado (p.explo, Regressão Logística ou Binomial, etc).
+
+
+
+```{r}
+library(gvlma)
+```
+
+```{r}
+summary(gvlma(modtr05p1a))
+```
+
+
+
+Como vemos do teste acima, nosso modelo passa no teste de Heterocedasticidade e da Função Link (nossa variável resposta é contínua), mas falha na normalidade dos resíduos e na combinação linear das preditoras.
+
+Às vezes, o modelo pode ser melhorado removendo-se pontos indicados como *outliers*, ou seja, primeiro faz-se uma limpeza dos dados e então cria-se um novo modelo. Muitas vezes, a remoção de *outliers* é suficiente para fazer com que o modelo passe nos testes. Os *outliers* que vamos remover estão indicados no gráfico QQ-plot na Figura @fig-grafdiag.
+
+```{r}
+modtr05p1b <- lm( price ~ horsepower + length + engine.size, data = autos[-c(120,16,46),])
+summary(modtr05p1b)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(modtr05p1b)
+```
+
+
+```{r}
+summary(gvlma(modtr05p1b))
+```
+
+
+```{r}
+modtr05p1c <- lm( price ~ horsepower + length + engine.size, data = autos[-c(120,16,46,117,93,91,116),])
+summary(modtr05p1c)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+plot(modtr05p1c)
+```
+
+
+```{r}
+modtr05p1d <- lm( price ~ horsepower + length + engine.size, data = autos[-c(120,16,46,117,93,91,116, 113, 112, 64, 91),])
+summary(modtr05p1d)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+plot(modtr05p1d)
+```
+
+```{r}
+summary(gvlma(modtr05p1d))
+```
+
+Este processo poderia continuar, mas não parece ser o mais adequado. Uma inspeção mais detalhada dos dados pode ser uma abordagem melhor.
+Um modelo que envolva alguma variável categórica, como o *fabricante*, etc, pode resultar em um modelo mais específico para categorias de carros e assim o modelo pode passar nos testes sobre as hipóteses do método dos mínimos quadrados.
+
+## Usando o pacote `easystats` e outros
+
+
+
+Como já vimos, um aspecto crucial quando criamos modelos de regressão é avaliar a qualidade do modelo ajustado. Investigamos o quão bem o modelo se ajusta aos dados e quais índices do ajuste devem ser reportado.
+
+Existem algumas funções para se criar os gráficos diagnósticos -- como vimos acima, mas, elas estão espalhadas em vários pacotes do **R**.
+
+O pacote `performance` da coleção do `easystats` tem como meta preencher esse gap e prover funcionalidades para se computar diversos índices de qualidade do modelo e qualidade do ajuste. Estas medidas incluem o **R-quadrado** ($r^2$), o `RMSE` (_root mean squared error_) ou o coeficiente de correlação intraclasse (ICC), mas também tem funções para a verificação do modelo com relação a _overdispersion_, _zero-inflation_, _convergência_ e _singularidade_.
+
+
+
+```{r}
+performance::check_model(modtr05p1a,  check = c("qq"))
+```
+
+```{r}
+performance::check_model(modtr05p1a,  check = c("ncv"))
+
+```
+
+```{r}
+performance::check_model(modtr05p1a,  check = c("normality"))
+
+```
+
+```{r}
+performance::check_model(modtr05p1a,  check = c("outliers"))
+
+```
+
+```{r}
+performance::check_model(modtr05p1a,  check = c("vif"))
+
+```
+
